@@ -28,7 +28,7 @@ export default function AuthPage() {
         return
       }
       const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, { redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset` })
-      setMessage(error ? error.message : 'If an account exists for this email, a password-reset link has been sent.')
+      setMessage(error ? error.message : 'If an account exists for this email, a password-reset link has been sent. Can\u2019t find it? Check your spam or junk folder.')
       setLoading(false)
       return
     }
@@ -37,7 +37,7 @@ export default function AuthPage() {
       const fullName = String(form.get('name') ?? '')
       const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: `${window.location.origin}/auth/callback` } })
       if (error) { setMessage(error.message); setLoading(false); return }
-      if (!data.session) { setMessage('Check your email to confirm your account, then sign in.'); setLoading(false); return }
+      if (!data.session) { setMessage('Check your email to confirm your account, then sign in. Can\u2019t find it? Check your spam or junk folder.'); setLoading(false); return }
       router.replace('/dashboard'); router.refresh(); return
     }
 
