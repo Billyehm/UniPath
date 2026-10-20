@@ -102,7 +102,7 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
             <span className="grid size-10 place-items-center rounded-xl bg-[#eff4ea] text-[#17351f]"><Plus className="size-5" /></span>
             <div>
               <h3 className="font-bold">New requirement</h3>
-              <p className="text-sm text-[#667069]">Set what applicants need to provide.</p>
+              
             </div>
           </div>
           <button
@@ -128,7 +128,7 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
       <section className="overflow-hidden rounded-3xl border border-[#dfe3da] bg-white">
         <div className="border-b border-[#dfe3da] px-5 py-5 sm:px-6">
           <h3 className="font-bold">Published requirements</h3>
-          <p className="mt-1 text-sm text-[#667069]">These are shown in every applicant’s checklist. Click one to edit it.</p>
+          <p className="mt-1 text-sm text-[#667069]">Click one to edit it.</p>
         </div>
         <div className="divide-y divide-[#edf0e9]">
           {requirements.map((item, index) => {

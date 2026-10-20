@@ -22,7 +22,7 @@ export default function LogoutButton() {
 
   return <button type="button" className="logout-setting" onClick={logout} disabled={loading}>
     <span><LogOut /></span>
-    <div><strong>{loading ? 'Signing out…' : 'Log out'}</strong><p>Sign out of your UniPath account on this device</p></div>
+    <div><strong>{loading ? 'Signing out…' : 'Log out'}</strong><p>Sign out on this device</p></div>
     <ChevronRight />
   </button>
 }
