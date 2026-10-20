@@ -1,4 +1,4 @@
-import '../../styles/admiro.css'
+import '../../styles/unipath.css'
 import AdminShell from '@/components/admin/AdminShell'
 import { requireStaff } from '@/lib/auth'
 

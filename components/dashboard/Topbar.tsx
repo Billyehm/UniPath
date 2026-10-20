@@ -12,7 +12,7 @@ const titles: Record<string, string> = {
 
 export default function Topbar({ onMenu, name, unreadNotifications }: { onMenu: () => void; name: string; unreadNotifications: number }) {
   const pathname = usePathname()
-  const title = titles[pathname] ?? (pathname.startsWith('/dashboard/documents/') ? 'Document Upload' : pathname.startsWith('/dashboard/requirements/') ? 'Requirement Details' : pathname.startsWith('/dashboard/universities/') ? 'University Details' : 'Admiro')
+  const title = titles[pathname] ?? (pathname.startsWith('/dashboard/documents/') ? 'Document Upload' : pathname.startsWith('/dashboard/requirements/') ? 'Requirement Details' : pathname.startsWith('/dashboard/universities/') ? 'University Details' : 'UniPath')
   return (
     <header className="adm-topbar">
       <div className="topbar-heading">

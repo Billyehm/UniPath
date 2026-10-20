@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Admiro | A clearer path to university',
+  title: 'UniPath | A clearer path to university',
   description: 'Plan applications, organise documents, track deadlines, and move toward university with confidence.',
   icons: {
     icon: [

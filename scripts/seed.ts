@@ -5,14 +5,14 @@ const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 if (!url || !serviceKey) throw new Error('Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY before seeding.')
 
 const supabase = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } })
-const password = 'AdmiroSeed!2026'
+const password = 'UniPathSeed!2026'
 const staff = [
-  { email: 'admin@admiro.test', name: 'Ada Admin', role: 'admin' },
-  { email: 'founder@admiro.test', name: 'Femi Founder', role: 'admin' },
-  { email: 'support@admiro.test', name: 'Ifeoma Support', role: 'support_agent' },
+  { email: 'admin@unipath.test', name: 'Ada Admin', role: 'admin' },
+  { email: 'founder@unipath.test', name: 'Femi Founder', role: 'admin' },
+  { email: 'support@unipath.test', name: 'Ifeoma Support', role: 'support_agent' },
 ] as const
 const applicantNames = ['William Okafor', 'Amara Eze', 'David Bello', 'Zainab Musa', 'Tobi Adeyemi', 'Chioma Nwosu', 'Samuel Okon', 'Amina Yusuf', 'Daniel Obi', 'Grace Lawal']
-const applicants = applicantNames.map((name, index) => ({ email: `applicant${index + 1}@admiro.test`, name, role: 'applicant' as const }))
+const applicants = applicantNames.map((name, index) => ({ email: `applicant${index + 1}@unipath.test`, name, role: 'applicant' as const }))
 const requirements = [
   { id: 'utme-result-slip', title: 'JAMB Registration Number & UTME Result Slip', description: 'Upload your JAMB registration number and UTME result slip.', guidance: 'Use a clear copy that shows your registration number, name and UTME result.', accepted_files: 'PDF, PNG or JPEG up to 10 MB', display_order: 1 },
   { id: 'olevel-results', title: 'O’Level Result(s)', description: 'Submit WAEC, NECO or NABTEB result(s). A maximum of two sittings is accepted, with five credits including English and Mathematics.', guidance: 'Upload every result used for your screening application. Make all subjects and grades readable.', accepted_files: 'PDF, PNG or JPEG up to 10 MB', display_order: 2 },
@@ -93,7 +93,7 @@ if (ticketError) throw ticketError
 
 const messageRows = ticketRows.flatMap((ticket, index) => [
   { id: `30000000-0000-4000-8000-${String(index * 2 + 1).padStart(12, '0')}`, ticket_id: ticket.id, sender_user_id: ticket.user_id, body: 'Please help me understand what I need to do next.', is_internal: false },
-  { id: `30000000-0000-4000-8000-${String(index * 2 + 2).padStart(12, '0')}`, ticket_id: ticket.id, sender_user_id: userIds.get(staff[2].email)!, body: 'Thanks for contacting Admiro. We have reviewed your request and added the next step here.', is_internal: false },
+  { id: `30000000-0000-4000-8000-${String(index * 2 + 2).padStart(12, '0')}`, ticket_id: ticket.id, sender_user_id: userIds.get(staff[2].email)!, body: 'Thanks for contacting UniPath. We have reviewed your request and added the next step here.', is_internal: false },
 ])
 const { error: messageError } = await supabase.from('support_messages').upsert(messageRows)
 if (messageError) throw messageError
@@ -186,7 +186,7 @@ if (notificationError) throw notificationError
 const { error: noticeError } = await supabase.from('system_notices').upsert({
   id: '60000000-0000-4000-8000-000000000001',
   title: 'Application review is active',
-  body: 'Keep your documents current so the Admiro team can complete your review without delay.',
+  body: 'Keep your documents current so the UniPath team can complete your review without delay.',
   is_active: true,
 })
 if (noticeError) throw noticeError

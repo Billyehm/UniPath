@@ -26,7 +26,7 @@ export default function Sidebar({ open, onClose, name, unreadNotifications }: { 
         <div>
           <div className="sidebar-brand-row">
             <Link href="/dashboard" className="adm-brand" onClick={onClose}>
-              <span className="adm-brand-mark"><GraduationCap /></span><span>Admiro</span>
+              <span className="adm-brand-mark"><GraduationCap /></span><span>UniPath</span>
             </Link>
             <button className="sidebar-close" aria-label="Close navigation" onClick={onClose}><X /></button>
           </div>

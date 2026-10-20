@@ -8,7 +8,7 @@
 4. In Supabase Auth, enable **Confirm email**, then add `http://localhost:3000/auth/callback` and the production equivalent to the redirect allow list exactly.
 5. Run `pnpm seed` to create 3 staff users, 10 applicants, 20 tickets, 15 stored documents, application requirements, universities, notifications, message history, and audit activity.
 
-The seed password is `AdmiroSeed!2026`. Seed accounts use the `@admiro.test` domain; the primary admin is `admin@admiro.test`. Change or remove seed credentials before production use.
+The seed password is `UniPathSeed!2026`. Seed accounts use the `@unipath.test` domain; the primary admin is `admin@unipath.test`. Change or remove seed credentials before production use.
 
 ## Security model
 

@@ -1,6 +1,6 @@
-# Admiro developer briefing audit
+# UniPath developer briefing audit
 
-Audited against `Admiro_Developer_Briefing.docx` (v4, September 2026).
+Audited against `UniPath_Developer_Briefing.docx` (v4, September 2026).
 
 ## Implemented in this repository
 
@@ -19,7 +19,7 @@ Audited against `Admiro_Developer_Briefing.docx` (v4, September 2026).
 - Founder overview across all students, including progress, stages, Action Needed totals, and queues.
 - Document-access audit log showing person, role, student, file, action, and time.
 - Payment-ready screen designed for collection before the final stage, without charging per requirement or upfront.
-- Clear statement of Admiro's responsibility and non-guarantee of admission outcomes.
+- Clear statement of UniPath's responsibility and non-guarantee of admission outcomes.
 
 ## Product details still unconfirmed in the source briefing
 

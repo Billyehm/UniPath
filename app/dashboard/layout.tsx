@@ -1,4 +1,4 @@
-import '../../styles/admiro.css'
+import '../../styles/unipath.css'
 import DashboardShell from '@/components/dashboard/DashboardShell'
 import { requireUser } from '@/lib/auth'
 import { getUnreadNotificationCount } from '@/lib/data/application'

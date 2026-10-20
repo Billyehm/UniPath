@@ -79,7 +79,7 @@ export async function getUniversityUpdates(userId: string): Promise<UniversityUp
   if (error) throw error
   const universityMap = new Map((universities ?? []).map((item) => [item.id, item.name]))
   const selected = new Set((selections ?? []).map((item) => item.university_id))
-  return (updates ?? []).map((update) => ({ id: update.id, universityId: update.university_id, university: update.university_id ? universityMap.get(update.university_id) || 'University' : 'Admiro', title: update.title, description: update.description, category: update.category, publishedAt: update.published_at, selected: update.university_id ? selected.has(update.university_id) : true }))
+  return (updates ?? []).map((update) => ({ id: update.id, universityId: update.university_id, university: update.university_id ? universityMap.get(update.university_id) || 'University' : 'UniPath', title: update.title, description: update.description, category: update.category, publishedAt: update.published_at, selected: update.university_id ? selected.has(update.university_id) : true }))
 }
 
 export async function getNotifications(userId: string, pageSize = 50) {
