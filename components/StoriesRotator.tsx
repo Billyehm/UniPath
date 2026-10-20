@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Star } from 'lucide-react'
 
@@ -19,19 +19,40 @@ const students = [
 
 const SLIDE_H = 252
 const STAY_MS = 3000
+const SWAP_MS = 550
+
+function Slide({ name, image, quote }: { name: string; image: string; quote: string }) {
+  return (
+    <div style={{ height: SLIDE_H }} className="flex flex-col">
+      <blockquote className="text-balance text-xl font-medium leading-snug tracking-[-.03em]">
+        &ldquo;{quote}&rdquo;
+      </blockquote>
+      <figcaption className="mt-auto flex items-center gap-3 pb-1">
+        <Image src={image} alt={`Portrait of ${name}`} width={96} height={96} className="size-12 rounded-full object-cover" />
+        <p className="font-semibold">{name}</p>
+      </figcaption>
+    </div>
+  )
+}
 
 export default function StoriesRotator() {
   const [index, setIndex] = useState(0)
+  const [leaving, setLeaving] = useState<number | null>(null)
   const [paused, setPaused] = useState(false)
+  const indexRef = useRef(0)
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     if (paused) return
     const id = setInterval(() => {
-      setIndex((prev) => {
-        let next = Math.floor(Math.random() * students.length)
-        if (next === prev) next = (next + 1) % students.length
-        return next
-      })
+      const prev = indexRef.current
+      let next = Math.floor(Math.random() * students.length)
+      if (next === prev) next = (next + 1) % students.length
+      indexRef.current = next
+      setLeaving(prev)
+      setIndex(next)
+      if (timer.current) clearTimeout(timer.current)
+      timer.current = setTimeout(() => setLeaving(null), SWAP_MS)
     }, STAY_MS)
     return () => clearInterval(id)
   }, [paused])
@@ -45,22 +66,14 @@ export default function StoriesRotator() {
       <div className="flex gap-1 text-[#658617]">
         {[1, 2, 3, 4, 5].map((x) => <Star key={x} className="size-4 fill-current" />)}
       </div>
-      <div className="mt-5 overflow-hidden" style={{ height: SLIDE_H }} aria-live="polite">
-        <div
-          className="transition-transform duration-500 ease-out will-change-transform motion-reduce:transition-none"
-          style={{ transform: `translateY(${-index * SLIDE_H}px)` }}
-        >
-          {students.map((s) => (
-            <div key={s.name} style={{ height: SLIDE_H }} className="flex flex-col">
-              <blockquote className="text-balance text-xl font-medium leading-snug tracking-[-.03em]">
-                &ldquo;{s.quote}&rdquo;
-              </blockquote>
-              <figcaption className="mt-auto flex items-center gap-3 pb-1">
-                <Image src={s.image} alt={`Portrait of ${s.name}`} width={96} height={96} className="size-12 rounded-full object-cover" />
-                <p className="font-semibold">{s.name}</p>
-              </figcaption>
-            </div>
-          ))}
+      <div className="relative mt-5 overflow-hidden" style={{ height: SLIDE_H }} aria-live="polite">
+        {leaving !== null && (
+          <div key={`out-${leaving}`} className="story-exit absolute inset-0" aria-hidden="true">
+            <Slide {...students[leaving]} />
+          </div>
+        )}
+        <div key={`in-${index}`} className="story-enter absolute inset-0">
+          <Slide {...students[index]} />
         </div>
       </div>
     </figure>

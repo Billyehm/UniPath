@@ -34,6 +34,17 @@
 .hero-delay-2 { animation-delay: 160ms; }
 .hero-delay-3 { animation-delay: 240ms; }
 
+@keyframes story-in-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes story-out-up {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
+}
+.story-enter { animation: story-in-up 550ms cubic-bezier(.22, .8, .3, 1) both; }
+.story-exit { animation: story-out-up 550ms cubic-bezier(.22, .8, .3, 1) both; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
