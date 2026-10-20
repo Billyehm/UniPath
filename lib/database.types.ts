@@ -98,18 +98,6 @@ export interface Database {
         Update: { name?: string; short_name?: string; location?: string; description?: string; programmes?: string; application_deadline?: string | null; is_active?: boolean }
         Relationships: Relationship[]
       }
-      institutions: {
-        Row: { id: string; name: string; type: string; ownership: string; state: string; year_established: number | null; website: string | null; is_active: boolean; created_at: string; updated_at: string }
-        Insert: { id: string; name: string; type: string; ownership: string; state: string; year_established?: number | null; website?: string | null; is_active?: boolean }
-        Update: { name?: string; type?: string; ownership?: string; state?: string; year_established?: number | null; website?: string | null; is_active?: boolean }
-        Relationships: Relationship[]
-      }
-      institution_courses: {
-        Row: { id: string; institution_id: string; course_name: string; qualification: string; duration_years: number | null; faculty: string | null; source: string; created_at: string }
-        Insert: { id?: string; institution_id: string; course_name: string; qualification: string; duration_years?: number | null; faculty?: string | null; source?: string }
-        Update: { course_name?: string; qualification?: string; duration_years?: number | null; faculty?: string | null; source?: string }
-        Relationships: Relationship[]
-      }
       university_selections: {
         Row: { user_id: string; university_id: string; selected_at: string }
         Insert: { user_id: string; university_id: string; selected_at?: string }

@@ -29,14 +29,7 @@ export default function InstitutionCourses({ institutionId, total }: { instituti
         const result = await response.json()
         if (cancelled) return
         if (response.ok) {
-          setCourses(result.courses.map((course: { id: string; course_name: string; qualification: string; duration_years: number | null; faculty: string | null; source: 'listed' | 'inferred' }) => ({
-            id: course.id,
-            courseName: course.course_name,
-            qualification: course.qualification,
-            durationYears: course.duration_years,
-            faculty: course.faculty,
-            source: course.source,
-          })))
+          setCourses(result.courses)
           setResultTotal(result.total)
         }
         setLoaded(true)

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { cache } from 'react'
-import type { Institution, InstitutionCourse, Requirement, University, UniversityUpdate } from '@/lib/models'
+import { listInstitutions, getInstitutionDetail } from '@/lib/institutions-source'
+import type { Institution, Requirement, University, UniversityUpdate } from '@/lib/models'
 
 export const getRequirements = cache(async (userId: string): Promise<Requirement[]> => {
   const supabase = await createClient()
@@ -70,36 +71,12 @@ export async function getUniversity(userId: string, universityId: string) {
 }
 
 export const getInstitutions = cache(async (): Promise<Institution[]> => {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('institutions')
-    .select('id,name,type,ownership,state,year_established,website')
-    .eq('is_active', true)
-    .order('name')
-  if (error) throw error
-  return (data ?? []).map((item) => ({
-    id: item.id,
-    name: item.name,
-    type: item.type as Institution['type'],
-    ownership: item.ownership as Institution['ownership'],
-    state: item.state,
-    yearEstablished: item.year_established,
-    website: item.website,
-  }))
+  const { institutions } = await listInstitutions({ limit: 1000 })
+  return institutions
 })
 
 export async function getInstitution(institutionId: string): Promise<{ institution: Institution; courseCount: number } | null> {
-  const supabase = await createClient()
-  const [{ data, error }, { count }] = await Promise.all([
-    supabase.from('institutions').select('id,name,type,ownership,state,year_established,website').eq('id', institutionId).eq('is_active', true).maybeSingle(),
-    supabase.from('institution_courses').select('id', { count: 'exact', head: true }).eq('institution_id', institutionId),
-  ])
-  if (error) throw error
-  if (!data) return null
-  return {
-    institution: { id: data.id, name: data.name, type: data.type as Institution['type'], ownership: data.ownership as Institution['ownership'], state: data.state, yearEstablished: data.year_established, website: data.website },
-    courseCount: count ?? 0,
-  }
+  return getInstitutionDetail(institutionId)
 }
 
 export async function getUniversityUpdates(userId: string): Promise<UniversityUpdate[]> {
