@@ -111,7 +111,7 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
             aria-expanded={showNewForm}
             className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#17351f] px-5 text-sm font-bold text-white"
           >
-            <Plus className={`size-4 transition-transform ${showNewForm ? 'rotate-45' : ''}`} />{showNewForm ? 'Close' : 'Add requirement'}
+            <Plus className={`size-4 transition-transform ${showNewForm ? 'rotate-45' : ''}`} />{showNewForm ? 'Close' : 'New requirement'}
           </button>
         </div>
         {showNewForm && (
