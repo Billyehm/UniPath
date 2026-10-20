@@ -671,7 +671,7 @@
 }
 
 @media (max-width: 960px) {
-  .adm-sidebar { transform: translateX(-102%); transition: transform .24s ease; }
+  .adm-sidebar { transform: translateX(-102%); transition: transform .24s ease; height: 100vh; height: 100dvh; overflow: hidden; overscroll-behavior: none; }
   .adm-sidebar.is-open { transform: translateX(0); box-shadow: 20px 0 50px rgba(9,25,15,.25); }
   .sidebar-close { display: grid; width: 35px; height: 35px; place-items: center; border: 1px solid rgba(255,255,255,.14); border-radius: 50%; background: transparent; color: white; }
   .sidebar-close svg { width: 17px; }
@@ -793,3 +793,12 @@
   padding: 8px 12px !important;
 }
 .max-h-\[620px\] article > p { line-height: 1.35rem !important; }
+
+/* Mobile drawer lock: the admin/support drawer must never move or scroll
+   with the page. dvh tracks the visible viewport so no white gap flashes
+   when the browser chrome shows/hides. The inner nav keeps its own
+   contained scroll so long menus stay reachable on short screens. */
+@media (max-width: 1023px) {
+  .mobile-drawer-lock { height: 100vh; height: 100dvh; overflow: hidden; overscroll-behavior: none; }
+  .mobile-drawer-lock nav { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+}

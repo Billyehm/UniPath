@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Bell, Building2, CircleHelp, FileCheck2, Files, GraduationCap, LayoutDashboard, Settings, UserRound, X } from 'lucide-react'
@@ -19,6 +20,13 @@ function isActive(pathname: string, href: string) {
 
 export default function Sidebar({ open, onClose, name, unreadNotifications }: { open: boolean; onClose: () => void; name: string; unreadNotifications: number }) {
   const pathname = usePathname()
+
+  useEffect(() => {
+    if (!open) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = previous }
+  }, [open])
   return (
     <>
       {open && <button className="sidebar-scrim" aria-label="Close navigation" onClick={onClose} />}
