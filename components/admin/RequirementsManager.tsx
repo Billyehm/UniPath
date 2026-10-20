@@ -18,6 +18,7 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
   const [newForm, setNewForm] = useState<FormValues>(blankForm)
   const [editForm, setEditForm] = useState<FormValues>(blankForm)
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [showNewForm, setShowNewForm] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
@@ -96,20 +97,32 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
   return (
     <div className="grid gap-6">
       <section className="rounded-3xl border border-[#dfe3da] bg-white p-5 sm:p-6">
-        <div className="flex items-center gap-3">
-          <span className="grid size-10 place-items-center rounded-xl bg-[#eff4ea] text-[#17351f]"><Plus className="size-5" /></span>
-          <div>
-            <h3 className="font-bold">New requirement</h3>
-            <p className="text-sm text-[#667069]">Set what applicants need to provide.</p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="grid size-10 place-items-center rounded-xl bg-[#eff4ea] text-[#17351f]"><Plus className="size-5" /></span>
+            <div>
+              <h3 className="font-bold">New requirement</h3>
+              <p className="text-sm text-[#667069]">Set what applicants need to provide.</p>
+            </div>
           </div>
-        </div>
-        <form onSubmit={create} className="mt-6 space-y-4">
-          {fields(newForm, changeNew)}
-          {error && !expandedId && <p className="text-sm text-rose-700">{error}</p>}
-          <button disabled={saving} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#17351f] px-6 text-sm font-bold text-white disabled:opacity-60">
-            <Plus className="size-4" />{saving ? 'Saving…' : 'Add requirement'}
+          <button
+            type="button"
+            onClick={() => setShowNewForm((open) => !open)}
+            aria-expanded={showNewForm}
+            className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#17351f] px-5 text-sm font-bold text-white"
+          >
+            <Plus className={`size-4 transition-transform ${showNewForm ? 'rotate-45' : ''}`} />{showNewForm ? 'Close' : 'Add requirement'}
           </button>
-        </form>
+        </div>
+        {showNewForm && (
+          <form onSubmit={create} className="mt-6 space-y-4 border-t border-[#edf0e9] pt-6">
+            {fields(newForm, changeNew)}
+            {error && !expandedId && <p className="text-sm text-rose-700">{error}</p>}
+            <button disabled={saving} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#17351f] px-6 text-sm font-bold text-white disabled:opacity-60">
+              <Plus className="size-4" />{saving ? 'Saving…' : 'Add requirement'}
+            </button>
+          </form>
+        )}
       </section>
 
       <section className="overflow-hidden rounded-3xl border border-[#dfe3da] bg-white">
