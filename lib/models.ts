@@ -26,6 +26,27 @@ export type University = {
   latestUpdate: string | null
 }
 
+export type InstitutionType = 'university' | 'polytechnic' | 'college_of_education'
+
+export type Institution = {
+  id: string
+  name: string
+  type: InstitutionType
+  ownership: 'federal' | 'state' | 'private'
+  state: string
+  yearEstablished: number | null
+  website: string | null
+}
+
+export type InstitutionCourse = {
+  id: string
+  courseName: string
+  qualification: string
+  durationYears: number | null
+  faculty: string | null
+  source: 'listed' | 'inferred'
+}
+
 export type UniversityUpdate = {
   id: string
   universityId: string | null

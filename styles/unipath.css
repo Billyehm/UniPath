@@ -802,3 +802,27 @@
   .mobile-drawer-lock { height: 100vh; height: 100dvh; overflow: hidden; overscroll-behavior: none; }
   .mobile-drawer-lock nav { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 }
+
+/* Institutions directory */
+.inline-link { display: inline-flex; align-items: center; gap: 6px; color: var(--adm-forest); font-weight: 650; }
+.inline-link svg { width: 15px; }
+.muted-line { margin: 4px 0 0; color: var(--adm-muted); font-size: 14px; }
+.capitalize { text-transform: capitalize; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 18px; }
+.chip { padding: 8px 14px; border: 1px solid var(--adm-border); border-radius: 999px; background: white; color: var(--adm-text); font-size: 14px; font-weight: 600; cursor: pointer; }
+.chip.active { border-color: var(--adm-forest); background: var(--adm-forest); color: white; }
+.badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; background: rgba(23,53,31,.08); color: var(--adm-forest); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.course-search { margin-bottom: 8px; }
+.result-count { margin: 0 0 12px; color: var(--adm-muted); font-size: 14px; }
+.course-groups { display: flex; flex-direction: column; gap: 18px; }
+.course-group-heading { margin: 0 0 8px; color: var(--adm-muted); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+.course-list { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.course-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--adm-border); border-radius: 12px; background: white; }
+.course-icon { display: grid; width: 34px; height: 34px; flex-shrink: 0; place-items: center; border-radius: 10px; background: rgba(23,53,31,.07); color: var(--adm-forest); }
+.course-icon svg { width: 16px; }
+.course-main { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 2px; }
+.course-main strong { font-size: 15px; }
+.course-meta { display: inline-flex; align-items: center; gap: 5px; color: var(--adm-muted); font-size: 13px; }
+.course-meta svg { width: 13px; }
+.disclaimer-note { display: flex; align-items: flex-start; gap: 8px; margin: 0; color: var(--adm-muted); font-size: 14px; }
+.disclaimer-note svg { width: 16px; flex-shrink: 0; margin-top: 2px; }

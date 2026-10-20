@@ -3,13 +3,14 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Bell, Building2, CircleHelp, FileCheck2, Files, GraduationCap, LayoutDashboard, Settings, UserRound, X } from 'lucide-react'
+import { Bell, Building2, CircleHelp, FileCheck2, Files, GraduationCap, LayoutDashboard, School, Settings, UserRound, X } from 'lucide-react'
 
 const nav = [
   { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
   { href: '/dashboard/documents', label: 'My Documents', icon: Files },
   { href: '/dashboard/requirements', label: 'Requirement', icon: FileCheck2 },
   { href: '/dashboard/universities', label: 'Universities', icon: Building2 },
+  { href: '/dashboard/institutions', label: 'Institutions', icon: School },
   { href: '/dashboard/updates', label: 'Updates', icon: GraduationCap },
   { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
 ]
