@@ -27,7 +27,7 @@ const faqs = [
 export default function Page() {
   return <main className="overflow-hidden bg-[#f7f8f3] text-[#17231b]">
     <section id="top" className="relative min-h-[760px] overflow-hidden bg-[#15271d] sm:min-h-[820px]">
-      <Image src="/hero-school.png" alt="Students walking across a university campus" fill priority sizes="100vw" className="object-cover" />
+      <Image src="/hero-school.jpg" alt="Students walking across a university campus" fill priority sizes="100vw" className="object-cover" />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(11,31,20,.93),rgba(11,31,20,.68)_52%,rgba(11,31,20,.24))]" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#0b1f14]/75 via-transparent to-transparent" />
       <header className="relative z-20 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-10">
