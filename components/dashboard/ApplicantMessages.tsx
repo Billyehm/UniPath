@@ -18,6 +18,7 @@ export default function ApplicantMessages({ initialTickets, userId }: { initialT
   const [selectedId, setSelectedId] = useState(initialTickets[0]?.id ?? '')
   const [draft, setDraft] = useState('')
   const [creating, setCreating] = useState(!initialTickets.length)
+  const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
 
   const selected = tickets.find((ticket) => ticket.id === selectedId)
@@ -25,13 +26,14 @@ export default function ApplicantMessages({ initialTickets, userId }: { initialT
   async function submit(event: FormEvent) {
     event.preventDefault(); setError('')
     const text = draft.trim()
-    if (!text) return
+    if (!text || sending) return
+    setSending(true)
     const now = new Date().toISOString()
     if (creating) {
       const subject = text.length > 80 ? `${text.slice(0, 80)}…` : text
       const response = await fetch('/api/support/tickets', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subject, message: text, priority: 'normal' }) })
       const result = await response.json()
-      if (!response.ok) { setError(result.error || 'Unable to send message'); return }
+      if (!response.ok) { setError(result.error || 'Unable to send message'); setSending(false); return }
       const ticket: Ticket = { id: result.id, user_id: userId, subject, status: 'open', priority: 'normal', assigned_to: null, created_at: now, updated_at: now, resolved_at: null, messages: [{ id: crypto.randomUUID(), ticket_id: result.id, sender_user_id: userId, body: text, is_internal: false, created_at: now }] }
       setTickets((items) => [ticket, ...items])
       setSelectedId(ticket.id)
@@ -39,10 +41,10 @@ export default function ApplicantMessages({ initialTickets, userId }: { initialT
     } else {
       const response = await fetch(`/api/support/tickets/${selectedId}/messages`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text, internal: false }) })
       const result = await response.json()
-      if (!response.ok) { setError(result.error || 'Unable to send message'); return }
+      if (!response.ok) { setError(result.error || 'Unable to send message'); setSending(false); return }
       setTickets((items) => items.map((ticket) => ticket.id === selectedId ? { ...ticket, messages: [...ticket.messages, { id: result.id, ticket_id: ticket.id, sender_user_id: userId, body: text, is_internal: false, created_at: now }] } : ticket))
     }
-    setDraft('')
+    setDraft(''); setSending(false)
   }
 
   return <div className="grid min-h-[620px] overflow-hidden rounded-3xl border border-[#dfe3da] bg-white lg:grid-cols-[320px_1fr]">
@@ -86,7 +88,7 @@ export default function ApplicantMessages({ initialTickets, userId }: { initialT
       <form onSubmit={submit} className="border-t border-[#dfe3da] p-4">
         <div className="flex gap-2">
           <textarea value={draft} onChange={(event) => setDraft(event.target.value)} className="min-h-16 flex-1 rounded-xl border border-[#cfd6cc] p-3 text-sm" placeholder="Write your message…" required />
-          <button className="grid size-12 shrink-0 place-items-center self-end rounded-full bg-[#17351f] text-white" aria-label="Send"><Send className="size-4" /></button>
+          <button disabled={sending} className="grid size-12 shrink-0 place-items-center self-end rounded-full bg-[#17351f] text-white transition-transform active:scale-90 disabled:opacity-60" aria-label="Send">{sending ? <span className="spinner" /> : <Send className="size-4" />}</button>
         </div>
         {error && <p className="mt-2 text-sm font-medium text-red-600">{error}</p>}
       </form>

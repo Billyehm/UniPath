@@ -119,7 +119,7 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
             {fields(newForm, changeNew)}
             {error && !expandedId && <p className="text-sm text-rose-700">{error}</p>}
             <button disabled={saving} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#17351f] px-6 text-sm font-bold text-white disabled:opacity-60">
-              <Plus className="size-4" />{saving ? 'Saving…' : 'Add requirement'}
+              <Plus className="size-4" />{saving ? <><span className="spinner" />Saving…</> : 'Add requirement'}
             </button>
           </form>
         )}
@@ -152,7 +152,7 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
                     {error && <p className="text-sm text-rose-700">{error}</p>}
                     <div className="flex flex-wrap gap-2">
                       <button disabled={saving} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#17351f] px-6 text-sm font-bold text-white disabled:opacity-60">
-                        {saving ? 'Saving…' : 'Save changes'}
+                        {saving ? <><span className="spinner" />Saving…</> : 'Save changes'}
                       </button>
                       <button type="button" onClick={closeRow} className="h-11 rounded-xl border border-[#cfd6cc] px-4 text-sm font-bold">Cancel</button>
                       <button type="button" onClick={() => remove(item)} disabled={saving} className="ml-auto inline-flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-bold text-rose-700 hover:bg-rose-50 disabled:opacity-50">

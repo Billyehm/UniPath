@@ -93,6 +93,29 @@
 .text-button svg { width: 15px; }
 .back-link { display: inline-flex; width: fit-content; align-items: center; gap: 8px; color: var(--adm-muted) !important; font-size: 16px; font-weight: 650; }
 .back-link svg { width: 17px; }
+.back-link { transition: .18s ease; }
+.back-link:hover { color: var(--adm-forest) !important; transform: translateX(-2px); }
+.back-link:active { transform: scale(.96); }
+.text-button { transition: .18s ease; }
+.text-button:hover { color: var(--adm-forest); }
+.text-button:active { transform: scale(.95); }
+
+/* ---- Interaction polish: press feedback, loading, focus ---- */
+.adm-button:active { transform: scale(.95); }
+.adm-button:disabled { cursor: not-allowed; opacity: .55; transform: none; }
+.adm-button:focus-visible { outline: 2px solid var(--adm-lime); outline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--adm-lime); outline-offset: 2px; }
+
+.spinner { display: inline-block; width: 16px; height: 16px; flex: none; border: 2px solid currentColor; border-top-color: transparent; border-radius: 999px; animation: adm-spin .7s linear infinite; }
+@keyframes adm-spin { to { transform: rotate(360deg); } }
+
+.clickable-card { transition: transform .18s ease, box-shadow .18s ease; }
+.clickable-card:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(23,53,31,.10); }
+.clickable-card:active { transform: scale(.985); }
+
+.adm-nav-item:active { transform: scale(.97); }
+.chip:active { transform: scale(.94); }
+.select-university:active { transform: scale(.93); }
 
 /* Dashboard */
 .dashboard-hero-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr); gap: 18px; }
