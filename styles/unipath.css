@@ -274,6 +274,17 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--adm-lime); outl
 .university-card { display: flex; min-height: 330px; flex-direction: column; padding: 20px; border: 1px solid var(--adm-border); border-radius: 17px; background: white; transition: .18s ease; }
 .university-card:hover { transform: translateY(-2px); box-shadow: var(--adm-shadow); }
 .university-card.selected { border-color: #6f8d75; box-shadow: inset 0 0 0 1px #6f8d75; }
+.university-card.selectable { cursor: pointer; }
+.university-card.selectable:focus-visible { outline: 2px solid var(--adm-forest); outline-offset: 2px; }
+.picked-check { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 999px; background: var(--adm-forest); color: var(--adm-lime); }
+.picked-check svg { width: 14px; }
+.search-clear { display: grid; width: 26px; height: 26px; flex-shrink: 0; place-items: center; border-radius: 999px; color: var(--adm-muted); }
+.search-clear:hover { background: var(--adm-soft); color: var(--adm-text); }
+.search-clear svg { width: 14px; }
+.selected-names-list { list-style: none; margin: 0; padding: 0; }
+.selected-names-list li + li { border-top: 1px solid var(--adm-border); }
+.selected-names-list button { display: block; width: 100%; padding: 12px 4px; font-size: 15px; font-weight: 600; text-align: left; color: var(--adm-text); cursor: pointer; }
+.selected-names-list button:hover { color: #b3261e; }
 .university-card-top { display: flex; align-items: center; justify-content: space-between; }
 .university-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 13px; background: var(--adm-forest); color: var(--adm-lime); font-size: 14px; font-weight: 800; }
 .select-university { display: inline-flex; height: 31px; align-items: center; gap: 5px; padding: 0 11px; border: 1px solid var(--adm-border); border-radius: 999px; background: white; color: var(--adm-muted); font-size: 13px; font-weight: 700; }
