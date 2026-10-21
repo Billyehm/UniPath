@@ -282,9 +282,13 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--adm-lime); outl
 .search-clear:hover { background: var(--adm-soft); color: var(--adm-text); }
 .search-clear svg { width: 14px; }
 .selected-names-list { list-style: none; margin: 0; padding: 0; }
+.selected-names-card .section-heading p svg { width: 13px; vertical-align: -2px; }
+.selected-names-list li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 4px; }
 .selected-names-list li + li { border-top: 1px solid var(--adm-border); }
-.selected-names-list button { display: block; width: 100%; padding: 12px 4px; font-size: 15px; font-weight: 600; text-align: left; color: var(--adm-text); cursor: pointer; }
-.selected-names-list button:hover { color: #b3261e; }
+.selected-names-list li > span { font-size: 15px; font-weight: 600; }
+.pick-remove { display: grid; width: 30px; height: 30px; flex-shrink: 0; place-items: center; border-radius: 999px; color: var(--adm-muted); }
+.pick-remove:hover { background: #fdecea; color: #b3261e; }
+.pick-remove svg { width: 15px; }
 .university-card-top { display: flex; align-items: center; justify-content: space-between; }
 .university-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 13px; background: var(--adm-forest); color: var(--adm-lime); font-size: 14px; font-weight: 800; }
 .select-university { display: inline-flex; height: 31px; align-items: center; gap: 5px; padding: 0 11px; border: 1px solid var(--adm-border); border-radius: 999px; background: white; color: var(--adm-muted); font-size: 13px; font-weight: 700; }
