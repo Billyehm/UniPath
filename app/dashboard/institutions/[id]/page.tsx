@@ -38,7 +38,7 @@ export default async function InstitutionDetailsPage({ params }: { params: Promi
       <aside className="adm-card subscription-card">
         <span className="subscription-icon"><Building2 /></span>
         <h3>{courseCount} courses listed</h3>
-        <p>Search below to find a course and see its qualification and typical duration.</p>
+        
       </aside>
     </div>
     <InstitutionCourses institutionId={institution.id} total={courseCount} />

@@ -31,7 +31,7 @@ export default function InstitutionsBrowser({ initialInstitutions }: { initialIn
       <div>
         <p className="eyebrow-dark">Institution directory</p>
         <h2>Explore every Nigerian higher institution.</h2>
-        <p>Search universities, polytechnics and colleges of education, then open one to see its courses.</p>
+        
       </div>
       <div className="selection-counter"><strong>{initialInstitutions.length}</strong><span>institutions listed</span></div>
     </section>
@@ -64,7 +64,7 @@ export default function InstitutionsBrowser({ initialInstitutions }: { initialIn
           ))}
         </div>
       ) : (
-        <div className="empty-state compact-empty"><Search /><h3>No institutions found</h3><p>Try a different search term or filter.</p></div>
+        <div className="empty-state compact-empty"><Search /><h3>No institutions found</h3></div>
       )}
     </section>
   </>

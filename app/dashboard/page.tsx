@@ -37,7 +37,7 @@ export default async function DashboardPage() {
         </aside>
       </div>
 
-      <section className="adm-card"><div className="section-heading"><div><h2>Recent document activity</h2><p>Latest submissions.</p></div></div><div className="activity-list">{documents.slice(0, 5).map((item) => <div className="activity-row" key={item.id}><span className="activity-dot" /><div><strong>{item.document_type}</strong><p>{item.original_name}</p></div><SharedStatusBadge value={item.review_status} /><time>{new Date(item.updated_at).toLocaleDateString()}</time></div>)}{!documents.length && <p className="py-8 text-center text-sm text-[#667069]">Upload a document to begin.</p>}</div></section>
+      <section className="adm-card"><div className="section-heading"><div><h2>Recent document activity</h2></div></div><div className="activity-list">{documents.slice(0, 5).map((item) => <div className="activity-row" key={item.id}><span className="activity-dot" /><div><strong>{item.document_type}</strong><p>{item.original_name}</p></div><SharedStatusBadge value={item.review_status} /><time>{new Date(item.updated_at).toLocaleDateString()}</time></div>)}</div></section>
     </div>
   )
 }

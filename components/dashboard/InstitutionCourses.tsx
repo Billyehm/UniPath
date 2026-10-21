@@ -53,7 +53,7 @@ export default function InstitutionCourses({ institutionId, total }: { instituti
     <div className="section-heading">
       <div>
         <h2>Courses</h2>
-        <p>Search the courses offered at this institution.</p>
+        
       </div>
     </div>
     <label className="search-field large course-search">

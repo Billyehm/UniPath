@@ -41,7 +41,7 @@ export default function AdminInstitutionCourses({ institutionId, total }: { inst
 
   return <section className="mt-6 rounded-2xl border border-[#dfe3da] bg-white p-5 md:p-7">
     <h2 className="text-xl font-bold">Courses</h2>
-    <p className="mt-1 text-sm text-[#667069]">Search the courses offered at this institution.</p>
+    
     <label className="mt-4 flex h-11 w-full max-w-xl items-center gap-2 rounded-xl border border-[#dfe3da] bg-white px-3">
       <Search className="size-4 shrink-0 text-[#667069]" /><span className="sr-only">Search courses</span>
       <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search courses, e.g. Computer Science" className="w-full bg-transparent text-sm outline-none placeholder:text-[#9aa39c]" />

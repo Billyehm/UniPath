@@ -20,7 +20,7 @@ export default function LogoutButton() {
 
   return <button type="button" className="logout-setting" onClick={logout} disabled={loading}>
     <span><LogOut /></span>
-    <div><strong className="flex items-center gap-2">{loading ? <><span className="spinner" />Signing out…</> : 'Log out'}</strong><p>Sign out on this device</p></div>
+    <div><strong className="flex items-center gap-2">{loading ? <><span className="spinner" />Signing out…</> : 'Log out'}</strong></div>
     <ChevronRight />
   </button>
 }

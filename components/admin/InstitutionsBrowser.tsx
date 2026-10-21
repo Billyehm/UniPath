@@ -64,7 +64,7 @@ export default function AdminInstitutionsBrowser({ initialInstitutions }: { init
     ) : (
       <div className="mt-4 rounded-2xl border border-[#dfe3da] bg-white p-12 text-center">
         <h3 className="font-bold">No institutions found</h3>
-        <p className="mt-1 text-sm text-[#667069]">Try a different search term or filter.</p>
+        
       </div>
     )}
   </>
