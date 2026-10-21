@@ -6,13 +6,13 @@ import { Bell, Menu, Search } from 'lucide-react'
 
 const titles: Record<string, string> = {
   '/dashboard': 'Overview', '/dashboard/requirements': 'Requirement', '/dashboard/documents': 'My Documents',
-  '/dashboard/universities': 'Universities', '/dashboard/updates': 'University Updates', '/dashboard/messages': 'Support Messages',
+  '/dashboard/my-institutions': 'My Institutions', '/dashboard/updates': 'University Updates', '/dashboard/messages': 'Support Messages',
   '/dashboard/notifications': 'Notifications', '/dashboard/profile': 'Student Profile', '/dashboard/settings': 'Settings', '/dashboard/support': 'Help & Support', '/dashboard/payment': 'Application Payment',
 }
 
 export default function Topbar({ onMenu, name, unreadNotifications }: { onMenu: () => void; name: string; unreadNotifications: number }) {
   const pathname = usePathname()
-  const title = titles[pathname] ?? (pathname.startsWith('/dashboard/documents/') ? 'Document Upload' : pathname.startsWith('/dashboard/requirements/') ? 'Requirement Details' : pathname.startsWith('/dashboard/universities/') ? 'University Details' : 'UniPath')
+  const title = titles[pathname] ?? (pathname.startsWith('/dashboard/documents/') ? 'Document Upload' : pathname.startsWith('/dashboard/requirements/') ? 'Requirement Details' : pathname.startsWith('/dashboard/institutions/') ? 'Institution Details' : 'UniPath')
   return (
     <header className="adm-topbar">
       <div className="topbar-heading">

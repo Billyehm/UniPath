@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { cache } from 'react'
 import { listInstitutions, getInstitutionDetail } from '@/lib/institutions-source'
 import type { Institution, Requirement, University, UniversityUpdate } from '@/lib/models'
+import { typeLabel } from '@/lib/models'
 
 export const getRequirements = cache(async (userId: string): Promise<Requirement[]> => {
   const supabase = await createClient()
@@ -43,10 +44,10 @@ export async function getRequirement(userId: string, requirementId: string) {
   return { ...requirement, document: { ...requirement.document, previewUrl: signed?.signedUrl ?? null } }
 }
 
-export const getDirectoryUniversities = cache(async (userId: string): Promise<University[]> => {
+export const getSelectableInstitutions = cache(async (userId: string): Promise<University[]> => {
   const supabase = await createClient()
   const [{ institutions }, { data: selections }] = await Promise.all([
-    listInstitutions({ type: 'university', limit: 1000 }),
+    listInstitutions({ limit: 1000 }),
     supabase.from('university_selections').select('university_id').eq('user_id', userId),
   ])
   const selected = new Set((selections ?? []).map((item) => item.university_id))
@@ -55,7 +56,7 @@ export const getDirectoryUniversities = cache(async (userId: string): Promise<Un
     name: institution.name,
     shortName: institution.name.replace(/^The /, '').split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase(),
     location: institution.state,
-    description: `${institution.ownership[0].toUpperCase()}${institution.ownership.slice(1)} university`,
+    description: `${institution.ownership[0].toUpperCase()}${institution.ownership.slice(1)} ${typeLabel(institution.type).toLowerCase()}`,
     programmes: '',
     deadline: null,
     selected: selected.has(institution.id),

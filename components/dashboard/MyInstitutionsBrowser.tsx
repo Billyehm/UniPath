@@ -1,0 +1,25 @@
+'use client'
+
+import { useMemo, useState } from 'react'
+import Link from 'next/link'
+import { ArrowRight, Check, MapPin, Search } from 'lucide-react'
+import type { University } from '@/lib/models'
+
+export default function UniversitiesBrowser({ initialUniversities }: { initialUniversities: University[] }) {
+  const [universities, setUniversities] = useState(initialUniversities)
+  const [query, setQuery] = useState('')
+  const [message, setMessage] = useState('')
+  const [busyId, setBusyId] = useState<string | null>(null)
+  const visible = useMemo(() => universities.filter((item) => `${item.name} ${item.shortName} ${item.location}`.toLowerCase().includes(query.toLowerCase())), [universities, query])
+  async function toggle(id: string) {
+    if (busyId) return
+    setMessage(''); setBusyId(id)
+    const response = await fetch(`/api/universities/${id}/selection`, { method: 'POST' })
+    const result = await response.json()
+    setBusyId(null)
+    if (!response.ok) { setMessage(result.error || 'Unable to update selection'); return }
+    setUniversities((items) => items.map((item) => item.id === id ? { ...item, selected: result.selected } : item))
+  }
+  const selectedCount = universities.filter((item) => item.selected).length
+  return <><section className="page-intro"><div><p className="eyebrow-dark">My institutions</p><h2>Build your shortlist.</h2><p>Search every Nigerian institution and choose up to three. <Link className="inline-link" href="/dashboard/institutions">Browse all institutions and their courses<ArrowRight /></Link></p></div><div className="selection-counter"><strong>{selectedCount}</strong><span>of 3 selected</span></div></section><section className="adm-card university-browser"><div className="university-toolbar"><label className="search-field large"><Search /><span className="sr-only">Search institutions</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by name, abbreviation or state" /></label><span>{visible.length} institutions</span></div>{message && <p className="form-message error-message" role="alert">{message}</p>}<div className="university-grid">{visible.map((university) => <article className={`university-card ${university.selected ? 'selected' : ''}`} key={university.id}><div className="university-card-top"><span className="university-mark">{university.shortName.slice(0, 2)}</span><button disabled={busyId === university.id} className={`select-university ${university.selected ? 'selected' : ''}`} onClick={() => toggle(university.id)} aria-pressed={university.selected}>{busyId === university.id ? <span className="spinner" /> : university.selected ? <><Check />Selected</> : 'Select'}</button></div><h3>{university.name}</h3><p className="location"><MapPin />{university.location}</p><p>{university.description}</p><div className="university-update"><small>Latest update</small><strong>{university.latestUpdate || 'No current announcement'}</strong></div><Link href={`/dashboard/institutions/${university.id}`}>View institution <ArrowRight /></Link></article>)}</div></section></>
+}
