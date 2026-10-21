@@ -196,7 +196,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--adm-lime); outl
 .requirement-copy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
 .requirement-copy strong { font-size: 16px; }
 .requirement-copy span { overflow: hidden; color: var(--adm-muted); font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
-.requirement-meta { display: flex; align-items: center; gap: 13px; }
+.requirement-meta { display: flex; flex-shrink: 0; align-items: center; gap: 13px; }
 .document-row .requirement-copy span { white-space: normal; }
 .row-arrow { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: var(--adm-soft); transition: .18s ease; }
 .row-arrow svg { width: 13px; }
