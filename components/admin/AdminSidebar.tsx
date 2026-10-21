@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Activity, BarChart3, Bell, BookOpen, Building2, ChevronLeft, ChevronRight, CircleHelp, FileCheck2, GraduationCap, Inbox, LayoutDashboard, LifeBuoy, ListChecks, LogOut, MessageSquareText, School, Settings, Users, UserRoundCog, X } from 'lucide-react'
+import { Activity, BarChart3, Bell, BookOpen, ChevronLeft, ChevronRight, CircleHelp, FileCheck2, GraduationCap, Inbox, LayoutDashboard, LifeBuoy, ListChecks, LogOut, MessageSquareText, School, Settings, Users, UserRoundCog, X } from 'lucide-react'
 import type { AppRole } from '@/lib/database.types'
 import { createClient } from '@/lib/supabase/client'
 
@@ -17,7 +17,6 @@ const adminGroups: NavigationGroup[] = [
     { href: '/admin/institutions', label: 'Institutions', icon: School },
     { href: '/admin/requirements', label: 'Requirements', icon: ListChecks },
     { href: '/admin/documents', label: 'Documents', icon: FileCheck2 },
-    { href: '/admin/universities', label: 'Universities', icon: Building2 },
     { href: '/admin/updates', label: 'Updates', icon: BookOpen },
     { href: '/admin/notifications', label: 'Notifications', icon: Bell },
   ] },
