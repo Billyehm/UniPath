@@ -43,6 +43,26 @@ export async function getRequirement(userId: string, requirementId: string) {
   return { ...requirement, document: { ...requirement.document, previewUrl: signed?.signedUrl ?? null } }
 }
 
+export const getDirectoryUniversities = cache(async (userId: string): Promise<University[]> => {
+  const supabase = await createClient()
+  const [{ institutions }, { data: selections }] = await Promise.all([
+    listInstitutions({ type: 'university', limit: 1000 }),
+    supabase.from('university_selections').select('university_id').eq('user_id', userId),
+  ])
+  const selected = new Set((selections ?? []).map((item) => item.university_id))
+  return institutions.map((institution) => ({
+    id: institution.id,
+    name: institution.name,
+    shortName: institution.name.replace(/^The /, '').split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase(),
+    location: institution.state,
+    description: `${institution.ownership[0].toUpperCase()}${institution.ownership.slice(1)} university`,
+    programmes: '',
+    deadline: null,
+    selected: selected.has(institution.id),
+    latestUpdate: null,
+  }))
+})
+
 export const getUniversities = cache(async (userId: string): Promise<University[]> => {
   const supabase = await createClient()
   const [{ data: universities, error }, { data: selections }, { data: updates }] = await Promise.all([

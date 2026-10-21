@@ -1,13 +1,8 @@
-import Link from 'next/link'
-import { ArrowLeft, Bell, CalendarDays, Check, MapPin, Megaphone } from 'lucide-react'
-import UniversitySelectionButton from '@/components/dashboard/UniversitySelectionButton'
-import { requireUser } from '@/lib/auth'
-import { getUniversity } from '@/lib/data/application'
+import { redirect } from 'next/navigation'
 
+// The old curated university detail page. University selection now runs on the
+// institutions directory, so deep links land on the directory detail page.
 export default async function UniversityDetailsPage({ params }: { params: Promise<{ id: string }> }) {
-  const user = await requireUser()
   const { id } = await params
-  const { university, updates } = await getUniversity(user.id, id)
-  if (!university) return <div className="adm-card empty-state"><h2>University not found</h2><Link href="/dashboard/universities" className="adm-button button-primary">Browse universities</Link></div>
-  return <div className="page-stack narrow-page"><Link className="back-link" href="/dashboard/universities"><ArrowLeft />Back to universities</Link><section className="university-hero"><div><span className="university-mark large-mark">{university.shortName.slice(0, 2)}</span><p>{university.shortName}</p><h2>{university.name}</h2><span className="location"><MapPin />{university.location}</span></div><UniversitySelectionButton universityId={university.id} initialSelected={university.selected} /></section><div className="detail-content-grid"><section className="adm-card"><h2>About the university</h2><p className="body-copy">{university.description}</p><div className="info-block"><span>Popular programmes</span><strong>{university.programmes}</strong></div><div className="info-block"><span>Application deadline</span><strong>{university.deadline ? new Date(university.deadline).toLocaleDateString() : 'Not announced'}</strong></div></section><aside className="adm-card subscription-card"><span className="subscription-icon"><Bell /></span><h3>{university.selected ? 'Updates are on' : 'Updates are off'}</h3><p>{university.selected ? 'You will receive announcements from this university.' : 'Select this university to receive its announcements.'}</p>{university.selected && <span className="subscribed-state"><Check />Subscribed</span>}</aside></div><section className="adm-card"><div className="section-heading"><div><h2>Latest updates</h2><p>Announcements and deadlines from {university.shortName}.</p></div></div>{updates.length ? <div className="updates-list">{updates.map((update) => <article className="update-row" key={update.id}><span className="update-icon"><Megaphone /></span><div><div className="update-heading"><span className={`category category-${update.category}`}>{update.category}</span><time><CalendarDays />{new Date(update.publishedAt).toLocaleDateString()}</time></div><h3>{update.title}</h3><p>{update.description}</p></div></article>)}</div> : <div className="empty-state compact-empty"><Megaphone /><h3>No recent announcements</h3><p>Updates will appear here when published.</p></div>}</section></div>
+  redirect(`/dashboard/institutions/${id}`)
 }

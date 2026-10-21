@@ -6,11 +6,11 @@ import NextActionsCarousel from '@/components/dashboard/NextActionsCarousel'
 import { requireUser } from '@/lib/auth'
 import { getApplicantDocuments, getApplicantTickets } from '@/lib/data/applicant'
 import SharedStatusBadge from '@/components/shared/StatusBadge'
-import { getActiveSystemNotice, getRequirements, getUniversities } from '@/lib/data/application'
+import { getActiveSystemNotice, getRequirements, getDirectoryUniversities } from '@/lib/data/application'
 
 export default async function DashboardPage() {
   const user = await requireUser()
-  const [documents, tickets, requirements, universities, systemNotice] = await Promise.all([getApplicantDocuments(user.id), getApplicantTickets(user.id), getRequirements(user.id), getUniversities(user.id), getActiveSystemNotice()])
+  const [documents, tickets, requirements, universities, systemNotice] = await Promise.all([getApplicantDocuments(user.id), getApplicantTickets(user.id), getRequirements(user.id), getDirectoryUniversities(user.id), getActiveSystemNotice()])
   const completed = requirements.filter((item) => item.status === 'completed').length
   const nextActions = requirements.filter((item) => item.status === 'action_needed' || item.status === 'not_started')
   const percent = requirements.length ? Math.round((completed / requirements.length) * 100) : 0
@@ -33,7 +33,7 @@ export default async function DashboardPage() {
         <section className="adm-card"><div className="section-heading"><div><h2>Application requirements</h2></div><Link href="/dashboard/requirements">View all <ArrowRight /></Link></div><RequirementsList items={requirements.slice(0, 4)} compact /></section>
         <aside className="side-stack">
           <section className="adm-card system-card"><div className="system-heading"><span className="system-pulse" /><div><span className="card-eyebrow">External system status</span><h2>{systemNotice?.title || 'No active notice'}</h2></div></div><p>{systemNotice?.body || 'All monitored systems are operating normally.'}</p></section>
-          <section className="adm-card selected-card"><div className="section-heading"><div><h2>Your universities</h2><p>{universities.filter((u) => u.selected).length} of 3 selected</p></div><Link href="/dashboard/universities">Manage</Link></div>{universities.filter((u) => u.selected).map((u) => <Link className="mini-university" href={`/dashboard/universities/${u.id}`} key={u.id}><span>{u.shortName}</span><div><strong>{u.name}</strong><small>{u.location}</small></div><ArrowRight /></Link>)}</section>
+          <section className="adm-card selected-card"><div className="section-heading"><div><h2>Your universities</h2><p>{universities.filter((u) => u.selected).length} of 3 selected</p></div><Link href="/dashboard/universities">Manage</Link></div>{universities.filter((u) => u.selected).map((u) => <Link className="mini-university" href={`/dashboard/institutions/${u.id}`} key={u.id}><span>{u.shortName}</span><div><strong>{u.name}</strong><small>{u.location}</small></div><ArrowRight /></Link>)}</section>
         </aside>
       </div>
 

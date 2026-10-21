@@ -14,7 +14,7 @@ const adminGroups: NavigationGroup[] = [
   { items: [
     { href: '/admin', label: 'Overview', icon: LayoutDashboard },
     { href: '/admin/students', label: 'Students', icon: Users },
-    { href: '/admin/institutions', label: 'Institutions', icon: School },
+    { href: '/admin/institutions', label: 'All Institutions', icon: School },
     { href: '/admin/requirements', label: 'Requirements', icon: ListChecks },
     { href: '/admin/documents', label: 'Documents', icon: FileCheck2 },
     { href: '/admin/updates', label: 'Updates', icon: BookOpen },
