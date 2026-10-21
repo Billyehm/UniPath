@@ -28,6 +28,14 @@ export type University = {
 
 export type InstitutionType = 'university' | 'polytechnic' | 'college_of_education'
 
+export const TYPE_LABELS: Record<InstitutionType, string> = {
+  university: 'University',
+  polytechnic: 'Polytechnic',
+  college_of_education: 'College of Education',
+}
+
+export function typeLabel(type: InstitutionType) { return TYPE_LABELS[type] }
+
 export type Institution = {
   id: string
   name: string

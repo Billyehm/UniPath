@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, MapPin, Search } from 'lucide-react'
 import type { Institution, InstitutionType } from '@/lib/models'
+import { TYPE_LABELS, typeLabel } from '@/lib/models'
 
 const TYPE_FILTERS: { value: '' | InstitutionType; label: string }[] = [
   { value: '', label: 'All' },
@@ -11,14 +12,6 @@ const TYPE_FILTERS: { value: '' | InstitutionType; label: string }[] = [
   { value: 'polytechnic', label: 'Polytechnics' },
   { value: 'college_of_education', label: 'Colleges of Education' },
 ]
-
-export const TYPE_LABELS: Record<InstitutionType, string> = {
-  university: 'University',
-  polytechnic: 'Polytechnic',
-  college_of_education: 'College of Education',
-}
-
-export function typeLabel(type: InstitutionType) { return TYPE_LABELS[type] }
 
 export default function InstitutionsBrowser({ initialInstitutions }: { initialInstitutions: Institution[] }) {
   const [query, setQuery] = useState('')

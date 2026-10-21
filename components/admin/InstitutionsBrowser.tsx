@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, MapPin, Search } from 'lucide-react'
 import type { Institution, InstitutionType } from '@/lib/models'
-import { typeLabel } from '@/components/dashboard/InstitutionsBrowser'
+import { typeLabel } from '@/lib/models'
 
 const TYPE_FILTERS: { value: '' | InstitutionType; label: string }[] = [
   { value: '', label: 'All' },

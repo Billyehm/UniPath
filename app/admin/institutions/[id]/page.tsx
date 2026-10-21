@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ArrowLeft, Building2, CalendarDays, Globe, Info, MapPin } from 'lucide-react'
 import AdminInstitutionCourses from '@/components/admin/InstitutionCourses'
-import { typeLabel } from '@/components/dashboard/InstitutionsBrowser'
+import { typeLabel } from '@/lib/models'
 import { requireAdmin } from '@/lib/auth'
 import { getInstitutionDetail } from '@/lib/institutions-source'
 
