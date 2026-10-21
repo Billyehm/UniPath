@@ -5,6 +5,9 @@ import { isSupabaseConfigured, getSupabaseEnv } from '@/lib/supabase/env'
 
 const authRoutes = ['/dashboard', '/admin', '/operations']
 
+const LOGIN_AT_COOKIE = 'unipath_login_at'
+const SESSION_TTL_MS = 5 * 60 * 60 * 1000 // 5 hours
+
 export async function updateSession(request: NextRequest) {
   if (!isSupabaseConfigured()) return NextResponse.next({ request })
 
@@ -33,6 +36,29 @@ export async function updateSession(request: NextRequest) {
     const redirect = NextResponse.redirect(loginUrl)
     response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie))
     return redirect
+  }
+
+  if (userId) {
+    const loginAt = Number(request.cookies.get(LOGIN_AT_COOKIE)?.value || 0)
+    if (!loginAt) {
+      // Session restored without a login timestamp (e.g. older session): start the 5h window now.
+      response.cookies.set(LOGIN_AT_COOKIE, String(Date.now()), {
+        path: '/',
+        maxAge: SESSION_TTL_MS / 1000,
+        sameSite: 'lax',
+      })
+    } else if (Date.now() - loginAt > SESSION_TTL_MS) {
+      // 5-hour session expired: sign out and send back to the login page.
+      await supabase.auth.signOut()
+      const expiredUrl = request.nextUrl.clone()
+      expiredUrl.pathname = '/auth'
+      expiredUrl.search = ''
+      expiredUrl.searchParams.set('expired', '1')
+      const redirect = NextResponse.redirect(expiredUrl)
+      response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie))
+      redirect.cookies.set(LOGIN_AT_COOKIE, '', { path: '/', maxAge: 0 })
+      return redirect
+    }
   }
 
   if (userId && (pathname.startsWith('/admin') || pathname.startsWith('/operations'))) {

@@ -1,17 +1,27 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { ArrowRight, Check, Eye, EyeOff, GraduationCap } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
+const SESSION_COOKIE = 'unipath_login_at'
+
+function stampSession() {
+  document.cookie = `${SESSION_COOKIE}=${Date.now()}; path=/; max-age=18000; SameSite=Lax`
+}
+
 export default function AuthPage() {
-  const router = useRouter()
   const [mode, setMode] = useState<'signin' | 'signup' | 'reset'>('signin')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('expired') === '1') {
+      setMessage('Your session ended after 5 hours. Sign in again to continue.')
+    }
+  }, [])
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setLoading(true); setMessage('')
@@ -38,14 +48,17 @@ export default function AuthPage() {
       const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: `${window.location.origin}/auth/callback` } })
       if (error) { setMessage(error.message); setLoading(false); return }
       if (!data.session) { setMessage('Check your email to confirm your account, then sign in. Can\u2019t find it? Check your spam or junk folder.'); setLoading(false); return }
-      router.replace('/dashboard'); router.refresh(); return
+      stampSession()
+      window.location.href = '/dashboard'
+      return
     }
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error || !data.user) { setMessage(error?.message || 'Unable to sign in'); setLoading(false); return }
-    const { data: staff } = await supabase.from('admin_users').select('user_id,role_id').eq('user_id', data.user.id).eq('is_active', true).maybeSingle()
-    const { data: staffRole } = staff ? await supabase.from('roles').select('name').eq('id', staff.role_id).maybeSingle() : { data: null }
-    router.replace(staff ? staffRole?.name === 'support_agent' ? '/admin/support' : '/admin' : '/dashboard'); router.refresh()
+    const { data: staff } = await supabase.from('admin_users').select('user_id, roles(name)').eq('user_id', data.user.id).eq('is_active', true).maybeSingle()
+    const roleName = (staff?.roles as unknown as { name: string } | null)?.name
+    stampSession()
+    window.location.href = staff ? roleName === 'support_agent' ? '/admin/support' : '/admin' : '/dashboard'
   }
 
   return <main className="auth-shell">

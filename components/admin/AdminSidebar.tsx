@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { Activity, BarChart3, Bell, BookOpen, ChevronLeft, ChevronRight, CircleHelp, FileCheck2, GraduationCap, Inbox, LayoutDashboard, LifeBuoy, ListChecks, LogOut, MessageSquareText, School, Settings, Users, UserRoundCog, X } from 'lucide-react'
 import type { AppRole } from '@/lib/database.types'
 import { createClient } from '@/lib/supabase/client'
@@ -56,7 +56,6 @@ function isActive(pathname: string, href: string) {
 
 export default function AdminSidebar({ name, role, collapsed, mobileOpen, onToggle, onMobileClose }: { name: string; role: AppRole; collapsed: boolean; mobileOpen: boolean; onToggle: () => void; onMobileClose: () => void }) {
   const pathname = usePathname()
-  const router = useRouter()
   const groups = role === 'admin' ? adminGroups : supportGroups
 
   useEffect(() => {
@@ -68,8 +67,8 @@ export default function AdminSidebar({ name, role, collapsed, mobileOpen, onTogg
 
   async function signOut() {
     await createClient().auth.signOut()
-    router.replace('/auth')
-    router.refresh()
+    document.cookie = 'unipath_login_at=; path=/; max-age=0'
+    window.location.href = '/auth'
   }
 
   return <><button aria-label="Close navigation" onClick={onMobileClose} className={`fixed inset-0 z-40 bg-black/35 backdrop-blur-sm lg:hidden ${mobileOpen ? 'block' : 'hidden'}`} />

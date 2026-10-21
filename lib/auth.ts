@@ -16,18 +16,11 @@ export const requireUser = cache(async (): Promise<AuthenticatedUser> => {
   const id = data?.claims?.sub
   if (!id) redirect('/auth')
 
-  const { data: user, error } = await supabase
-    .from('users')
-    .select('id,email,role')
-    .eq('id', id)
-    .single()
+  const [{ data: user, error }, { data: profile }] = await Promise.all([
+    supabase.from('users').select('id,email,role').eq('id', id).single(),
+    supabase.from('user_profiles').select('full_name').eq('user_id', id).maybeSingle(),
+  ])
   if (error || !user) redirect('/auth')
-
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('full_name')
-    .eq('user_id', id)
-    .maybeSingle()
 
   return { id: user.id, email: user.email, role: user.role, displayName: profile?.full_name || user.email }
 })
