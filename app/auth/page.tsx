@@ -5,10 +5,11 @@ import Link from 'next/link'
 import { ArrowRight, Check, Eye, EyeOff, GraduationCap } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
-const SESSION_COOKIE = 'unipath_login_at'
+const SESSION_COOKIE = 'unipath_last_active'
+const SESSION_COOKIE_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
 function stampSession() {
-  document.cookie = `${SESSION_COOKIE}=${Date.now()}; path=/; max-age=18000; SameSite=Lax`
+  document.cookie = `${SESSION_COOKIE}=${Date.now()}; path=/; max-age=${SESSION_COOKIE_MAX_AGE}; SameSite=Lax`
 }
 
 export default function AuthPage() {
@@ -19,7 +20,7 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get('expired') === '1') {
-      setMessage('Your session ended after 5 hours. Sign in again to continue.')
+      setMessage('You have been signed out after 5 hours of inactivity. Sign in again to continue.')
     }
   }, [])
 

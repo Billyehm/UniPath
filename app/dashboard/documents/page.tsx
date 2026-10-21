@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, FileText, ShieldCheck } from 'lucide-react'
+import { ArrowRight, ShieldCheck } from 'lucide-react'
 import { requireUser } from '@/lib/auth'
 import { getRequirements } from '@/lib/data/application'
 import StatusBadge from '@/components/dashboard/StatusBadge'
@@ -13,7 +13,7 @@ export default async function DocumentsPage() {
     </section>
     <section className="adm-card overflow-hidden">
       <div className="border-b border-[#dfe3da] bg-[#f7f8f3] px-5 py-5 sm:px-7"><div className="flex items-start gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#e1ede0] text-[#17351f]"><ShieldCheck className="size-5" /></span><div><h3 className="font-bold text-[#17231b]">Post-UTME screening checklist</h3></div></div></div>
-      <div className="divide-y divide-[#edf0e9]">{requirements.map((requirement, index) => <Link key={requirement.id} href={`/dashboard/documents/${requirement.id}`} className="group flex items-center gap-3 px-4 py-4 transition hover:bg-[#fafbf8] active:bg-[#f4f6f1] sm:gap-4 sm:px-7 sm:py-5"><span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#eff4ea] text-sm font-bold text-[#31583b]">{index + 1}</span><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#f7f8f3] text-[#54725d]"><FileText className="size-5" /></span><span className="min-w-0 flex-1"><strong className="block text-[15px] leading-6 text-[#17231b]">{requirement.title}</strong><span className="mt-0.5 block text-sm leading-6 text-[#667069]">{requirement.description}</span></span><span className="flex shrink-0 flex-col items-end justify-center gap-2"><StatusBadge status={requirement.status} /><ArrowRight className="size-5 text-[#54725d] transition group-hover:translate-x-1" /></span></Link>)}{!requirements.length && <div className="px-5 py-14 text-center text-sm text-[#667069]">No screening requirements have been published yet.</div>}</div>
+      <div className="px-5 sm:px-7">{requirements.map((requirement) => <Link key={requirement.id} href={`/dashboard/documents/${requirement.id}`} className="requirement-item document-row"><span className="requirement-copy"><strong>{requirement.title}</strong><span>{requirement.description}</span></span><span className="requirement-meta"><StatusBadge status={requirement.status} /><span className="row-arrow"><ArrowRight /></span></span></Link>)}{!requirements.length && <div className="py-14 text-center text-sm text-[#667069]">No screening requirements have been published yet.</div>}</div>
     </section>
   </div>
 }

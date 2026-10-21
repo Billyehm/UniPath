@@ -5,8 +5,9 @@ import { isSupabaseConfigured, getSupabaseEnv } from '@/lib/supabase/env'
 
 const authRoutes = ['/dashboard', '/admin', '/operations']
 
-const LOGIN_AT_COOKIE = 'unipath_login_at'
-const SESSION_TTL_MS = 5 * 60 * 60 * 1000 // 5 hours
+const LAST_ACTIVE_COOKIE = 'unipath_last_active'
+const SESSION_TTL_MS = 5 * 60 * 60 * 1000 // 5 hours of inactivity
+const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
 export async function updateSession(request: NextRequest) {
   if (!isSupabaseConfigured()) return NextResponse.next({ request })
@@ -39,16 +40,16 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (userId) {
-    const loginAt = Number(request.cookies.get(LOGIN_AT_COOKIE)?.value || 0)
-    if (!loginAt) {
-      // Session restored without a login timestamp (e.g. older session): start the 5h window now.
-      response.cookies.set(LOGIN_AT_COOKIE, String(Date.now()), {
+    const lastActive = Number(request.cookies.get(LAST_ACTIVE_COOKIE)?.value || 0)
+    if (!lastActive) {
+      // Session without an activity stamp (e.g. created before this shipped): start the window now.
+      response.cookies.set(LAST_ACTIVE_COOKIE, String(Date.now()), {
         path: '/',
-        maxAge: SESSION_TTL_MS / 1000,
+        maxAge: COOKIE_MAX_AGE,
         sameSite: 'lax',
       })
-    } else if (Date.now() - loginAt > SESSION_TTL_MS) {
-      // 5-hour session expired: sign out and send back to the login page.
+    } else if (Date.now() - lastActive > SESSION_TTL_MS) {
+      // Away for over 5 hours: sign out and send back to the login page.
       await supabase.auth.signOut()
       const expiredUrl = request.nextUrl.clone()
       expiredUrl.pathname = '/auth'
@@ -56,8 +57,15 @@ export async function updateSession(request: NextRequest) {
       expiredUrl.searchParams.set('expired', '1')
       const redirect = NextResponse.redirect(expiredUrl)
       response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie))
-      redirect.cookies.set(LOGIN_AT_COOKIE, '', { path: '/', maxAge: 0 })
+      redirect.cookies.set(LAST_ACTIVE_COOKIE, '', { path: '/', maxAge: 0 })
       return redirect
+    } else if (Date.now() - lastActive > 60_000) {
+      // Still active: slide the 5-hour inactivity window forward (throttled to once a minute).
+      response.cookies.set(LAST_ACTIVE_COOKIE, String(Date.now()), {
+        path: '/',
+        maxAge: COOKIE_MAX_AGE,
+        sameSite: 'lax',
+      })
     }
   }
 

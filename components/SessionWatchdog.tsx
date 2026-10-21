@@ -3,12 +3,18 @@
 import { useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
-const LOGIN_AT_COOKIE = 'unipath_login_at'
-const SESSION_TTL_MS = 5 * 60 * 60 * 1000 // 5 hours
+const LAST_ACTIVE_COOKIE = 'unipath_last_active'
+const INACTIVITY_TTL_MS = 5 * 60 * 60 * 1000 // 5 hours
+const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
+const ACTIVITY_THROTTLE_MS = 60_000
 
-function readLoginAt(): number {
-  const match = document.cookie.match(new RegExp(`(?:^|; )${LOGIN_AT_COOKIE}=([^;]*)`))
+function readLastActive(): number {
+  const match = document.cookie.match(new RegExp(`(?:^|; )${LAST_ACTIVE_COOKIE}=([^;]*)`))
   return match ? Number(match[1]) || 0 : 0
+}
+
+function touch() {
+  document.cookie = `${LAST_ACTIVE_COOKIE}=${Date.now()}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`
 }
 
 async function expireSession() {
@@ -19,16 +25,17 @@ async function expireSession() {
   }
 }
 
-/** Signs the user out the moment the 5-hour session ends, even mid-page. */
+/** Signs the user out after 5 hours without activity, even on an open page. */
 export default function SessionWatchdog() {
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined
+    let lastTouch = 0
 
     const arm = () => {
       if (timer) clearTimeout(timer)
-      const loginAt = readLoginAt()
-      if (!loginAt) return
-      const remaining = loginAt + SESSION_TTL_MS - Date.now()
+      const lastActive = readLastActive()
+      if (!lastActive) return
+      const remaining = lastActive + INACTIVITY_TTL_MS - Date.now()
       if (remaining <= 0) {
         void expireSession()
         return
@@ -36,10 +43,22 @@ export default function SessionWatchdog() {
       timer = setTimeout(() => void expireSession(), remaining)
     }
 
+    const onActivity = () => {
+      const now = Date.now()
+      if (now - lastTouch < ACTIVITY_THROTTLE_MS) return
+      lastTouch = now
+      touch()
+      arm()
+    }
+
     arm()
+    window.addEventListener('pointerdown', onActivity)
+    window.addEventListener('keydown', onActivity)
     document.addEventListener('visibilitychange', arm)
     return () => {
       if (timer) clearTimeout(timer)
+      window.removeEventListener('pointerdown', onActivity)
+      window.removeEventListener('keydown', onActivity)
       document.removeEventListener('visibilitychange', arm)
     }
   }, [])

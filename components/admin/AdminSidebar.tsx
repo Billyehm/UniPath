@@ -67,7 +67,7 @@ export default function AdminSidebar({ name, role, collapsed, mobileOpen, onTogg
 
   async function signOut() {
     await createClient().auth.signOut()
-    document.cookie = 'unipath_login_at=; path=/; max-age=0'
+    document.cookie = 'unipath_last_active=; path=/; max-age=0'
     window.location.href = '/auth'
   }
 

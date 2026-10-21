@@ -14,7 +14,7 @@ export default function LogoutButton() {
       setLoading(false)
       return
     }
-    document.cookie = 'unipath_login_at=; path=/; max-age=0'
+    document.cookie = 'unipath_last_active=; path=/; max-age=0'
     window.location.href = '/auth'
   }
 
