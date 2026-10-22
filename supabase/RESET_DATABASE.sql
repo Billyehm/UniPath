@@ -14,11 +14,11 @@
 --    the user accounts are deleted below.
 drop schema public cascade;
 
--- 2. Clear stored file records so account deletion is not blocked.
-delete from storage.objects;
-
--- 3. Delete all login accounts (no orphaned auth users remain).
-delete from auth.users;
+-- 2. Wipe all login accounts and everything tied to them (sessions,
+--    identities, stored file records). TRUNCATE ... CASCADE bypasses
+--    the storage delete-protection trigger and clears every table that
+--    references auth.users. No orphaned accounts remain.
+truncate auth.users cascade;
 
 -- 3. Recreate the schema with the grants Supabase expects.
 create schema public;
