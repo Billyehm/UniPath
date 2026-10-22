@@ -47,6 +47,7 @@ export async function POST(request: Request) {
   const orderId = `UNIPATH-${Date.now()}-${Math.floor(Math.random() * 1000000)}`
   let rrr: string
   let raw: unknown
+  let testMode = false
   try {
     const result = await generateRRR({
       orderId,
@@ -58,6 +59,7 @@ export async function POST(request: Request) {
     })
     rrr = result.rrr
     raw = result.raw
+    testMode = result.testMode
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Remita request failed.' }, { status: 502 })
   }
@@ -80,5 +82,5 @@ export async function POST(request: Request) {
     .single()
 
   if (error) return NextResponse.json({ error: 'Could not save the payment reference.' }, { status: 500 })
-  return NextResponse.json({ paymentId: payment.id, rrr, amountKobo: requirement.amount_kobo, amountLabel: formatNaira(requirement.amount_kobo) })
+  return NextResponse.json({ paymentId: payment.id, rrr, amountKobo: requirement.amount_kobo, amountLabel: formatNaira(requirement.amount_kobo), testMode })
 }

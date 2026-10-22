@@ -40,9 +40,17 @@ export type GenerateRRRInput = {
   description: string
 }
 
-export type GenerateRRRResult = { rrr: string; raw: unknown }
+export type GenerateRRRResult = { rrr: string; raw: unknown; testMode: boolean }
+
+export function isRemitaTestMode(): boolean {
+  return process.env.REMITA_TEST_MODE === '1'
+}
 
 export async function generateRRR(input: GenerateRRRInput): Promise<GenerateRRRResult> {
+  if (isRemitaTestMode()) {
+    const rrr = Date.now().toString().slice(-12).padStart(12, '0')
+    return { rrr, raw: { testMode: true, orderId: input.orderId }, testMode: true }
+  }
   const { merchantId, serviceTypeId, apiKey, baseUrl } = getRemitaConfig()
   const apiHash = sha512Hex(`${merchantId}${serviceTypeId}${input.orderId}${input.amountNaira}${apiKey}`)
   const response = await fetch(`${baseUrl}/remita/exapp/api/v1/send/api/echannelsvc/merchant/api/paymentinit`, {
@@ -67,7 +75,7 @@ export async function generateRRR(input: GenerateRRRInput): Promise<GenerateRRRR
   if (!response.ok || !rrr) {
     throw new Error(typeof data?.statusmessage === 'string' ? data.statusmessage : 'Remita could not generate a payment reference.')
   }
-  return { rrr, raw: data }
+  return { rrr, raw: data, testMode: false }
 }
 
 export type RRRStatus = 'successful' | 'pending' | 'failed'
@@ -75,6 +83,9 @@ export type RRRStatus = 'successful' | 'pending' | 'failed'
 export type CheckRRRResult = { status: RRRStatus; raw: unknown }
 
 export async function checkRRRStatus(rrr: string): Promise<CheckRRRResult> {
+  if (isRemitaTestMode()) {
+    return { status: 'successful', raw: { testMode: true, rrr } }
+  }
   const { merchantId, apiKey, baseUrl } = getRemitaConfig()
   const apiHash = sha512Hex(`${rrr}${apiKey}${merchantId}`)
   const response = await fetch(

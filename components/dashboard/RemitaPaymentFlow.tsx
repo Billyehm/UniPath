@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { BadgeCheck, Copy, Loader2, RefreshCw } from 'lucide-react'
 import { formatNaira } from '@/lib/remita'
 
-type Payment = { id: string; rrr: string; amount_kobo: number; status: 'pending' | 'successful' | 'failed'; verified_at: string | null }
+type Payment = { id: string; rrr: string; amount_kobo: number; status: 'pending' | 'successful' | 'failed'; verified_at: string | null; testMode?: boolean }
 
 export default function RemitaPaymentFlow({ requirementId, amountKobo }: { requirementId: string; amountKobo: number }) {
   const router = useRouter()
@@ -33,7 +33,7 @@ export default function RemitaPaymentFlow({ requirementId, amountKobo }: { requi
     const result = await response.json()
     setBusy(false)
     if (!response.ok) { setError(result.error || 'Could not start the payment.'); return }
-    setPayment({ id: result.paymentId, rrr: result.rrr, amount_kobo: result.amountKobo, status: 'pending', verified_at: null })
+    setPayment({ id: result.paymentId, rrr: result.rrr, amount_kobo: result.amountKobo, status: 'pending', verified_at: null, testMode: result.testMode })
   }
 
   async function verify() {
@@ -63,6 +63,7 @@ export default function RemitaPaymentFlow({ requirementId, amountKobo }: { requi
 
   return <div className="payment-panel">
     <div className="payment-amount"><span>Amount due</span><strong>{formatNaira(amountKobo)}</strong></div>
+    {payment?.testMode && <p className="test-mode-badge">Test mode, no real money moves</p>}
 
     {payment?.status === 'successful' ? (
       <div className="payment-complete"><span><BadgeCheck /></span><h3>Payment confirmed</h3><p>Reference: {payment.rrr}</p></div>

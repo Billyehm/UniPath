@@ -294,6 +294,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--adm-lime); outl
 .rrr-box span { color: var(--adm-muted); font-size: 13px; }
 .rrr-box strong { font-size: 30px; letter-spacing: 0.12em; }
 .rrr-channels { color: var(--adm-muted); font-size: 14px; line-height: 1.6; }
+.test-mode-badge { display: inline-block; align-self: flex-start; padding: 4px 10px; border-radius: 999px; background: #fff7e6; border: 1px solid #e8c96a; color: #8a6d1b; font-size: 12px; font-weight: 700; }
 .spin { animation: adm-spin 0.9s linear infinite; }
 .pick-remove { display: grid; width: 30px; height: 30px; flex-shrink: 0; place-items: center; border-radius: 999px; color: var(--adm-muted); }
 .pick-remove:hover { background: #fdecea; color: #b3261e; }
