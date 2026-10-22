@@ -25,6 +25,7 @@ alter table public.requirements
   add column if not exists amount_kobo integer check (amount_kobo is null or amount_kobo > 0);
 
 alter table public.payments enable row level security;
+grant select, insert, update on public.payments to authenticated;
 create policy "owners view own payments" on public.payments
   for select to authenticated using (user_id = (select auth.uid()) or public.is_staff());
 create policy "owners create own payments" on public.payments
