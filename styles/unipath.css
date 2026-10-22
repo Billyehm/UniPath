@@ -190,9 +190,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--adm-lime); outl
 .status-action-needed { background: var(--adm-danger-bg); color: var(--adm-danger); }
 .status-not-started { background: #f0f1ee; color: #667069; }
 .requirements-list { display: flex; flex-direction: column; }
-.requirement-item { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 4px; border-top: 1px solid var(--adm-border); }
+.requirement-item { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 4px; border-top: 1px solid var(--adm-border); transition: transform .12s ease, background .12s ease; }
 .requirement-item:first-child { border-top: 0; }
 .requirement-item:hover .row-arrow { background: var(--adm-lime); color: var(--adm-forest); }
+.requirement-item:active { transform: scale(.985); }
 .requirement-copy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
 .requirement-copy strong { font-size: 16px; }
 .requirement-copy span { overflow: hidden; color: var(--adm-muted); font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
@@ -411,8 +412,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--adm-lime); outl
 .page-tabs button.active::after { position: absolute; right: 0; bottom: -1px; left: 0; height: 2px; background: var(--adm-forest); content: ''; }
 .page-tabs button span { display: inline-grid; min-width: 17px; height: 17px; margin-left: 5px; place-items: center; border-radius: 20px; background: var(--adm-danger); color: white; font-size: 12px; }
 .notification-list { display: flex; flex-direction: column; }
-.notification-row { position: relative; display: grid; grid-template-columns: 39px minmax(0, 1fr) auto; gap: 13px; align-items: start; padding: 17px 8px; border-top: 1px solid var(--adm-border); }
+.notification-row { position: relative; display: grid; grid-template-columns: 39px minmax(0, 1fr) auto; gap: 13px; align-items: start; padding: 17px 8px; border-top: 1px solid var(--adm-border); transition: transform .12s ease; }
 .notification-row:first-child { border-top: 0; }
+.notification-row:active { transform: scale(.985); }
 .notification-row.unread { margin: 0 -10px; padding-right: 18px; padding-left: 18px; border-radius: 10px; background: #f8faef; }
 .notification-icon { display: grid; width: 39px; height: 39px; place-items: center; border-radius: 11px; background: var(--adm-soft); color: var(--adm-forest); }
 .notification-icon svg { width: 17px; }
