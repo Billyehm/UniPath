@@ -54,7 +54,7 @@ export default function AuthPage() {
       const fullName = String(form.get('name') ?? '')
       const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: `${window.location.origin}/auth/callback` } })
       if (error) { showMessage(error.message, 'error'); setLoading(false); return }
-      if (!data.session) { showMessage('Check your email to confirm your account, then sign in. Can\u2019t find it? Check your spam or junk folder.', 'success'); setLoading(false); return }
+      if (!data.session) { window.location.href = `/auth/check-email?email=${encodeURIComponent(email)}`; return }
       stampSession()
       window.location.href = '/dashboard'
       return
