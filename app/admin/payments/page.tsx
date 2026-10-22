@@ -1,4 +1,5 @@
 import { getAdminPayments } from '@/lib/data/admin'
+import type { AdminPayment } from '@/lib/models'
 import { formatNaira } from '@/lib/monnify'
 
 const statusStyle: Record<string, string> = {
@@ -8,14 +9,21 @@ const statusStyle: Record<string, string> = {
 }
 
 export default async function AdminPaymentsPage() {
-  const payments = await getAdminPayments()
+  let payments: AdminPayment[] = []
+  let loadError: string | null = null
+  try {
+    payments = await getAdminPayments()
+  } catch (error) {
+    loadError = error instanceof Error ? error.message : 'Could not load payments.'
+  }
   return <div className="mx-auto max-w-7xl">
     <div className="mb-6">
       <p className="text-sm font-bold uppercase tracking-[.16em] text-[#54725d]">Money in</p>
       <h2 className="mt-2 text-4xl font-semibold tracking-[-.045em]">Payments</h2>
       <p className="mt-2 text-[#667069]">Every Monnify payment attempt, newest first.</p>
     </div>
-    <section className="overflow-hidden rounded-3xl border border-[#dfe3da] bg-white">
+    {loadError && <div className="rounded-2xl border border-rose-200 bg-rose-50 p-5 text-sm font-medium text-rose-700">{loadError}</div>}
+    {!loadError && <section className="overflow-hidden rounded-3xl border border-[#dfe3da] bg-white">
       <div className="divide-y divide-[#edf0e9]">
         {payments.map((payment) => (
           <article key={payment.id} className="flex flex-wrap items-center gap-3 px-5 py-4 sm:px-6">
@@ -32,6 +40,6 @@ export default async function AdminPaymentsPage() {
         ))}
         {!payments.length && <div className="px-6 py-16 text-center text-sm text-[#667069]">No payments yet.</div>}
       </div>
-    </section>
+    </section>}
   </div>
 }
