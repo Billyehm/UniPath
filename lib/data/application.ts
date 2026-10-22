@@ -45,6 +45,21 @@ export async function getRequirement(userId: string, requirementId: string) {
   return { ...requirement, document: { ...requirement.document, previewUrl: signed?.signedUrl ?? null } }
 }
 
+export const getUploadedDocuments = cache(async (userId: string) => {
+  const supabase = await createClient()
+  const { data: documents } = await supabase
+    .from('uploaded_documents')
+    .select('id,document_type,original_name,review_status,storage_path,updated_at')
+    .eq('user_id', userId)
+    .order('updated_at', { ascending: false })
+  const items = await Promise.all((documents ?? []).map(async (document) => {
+    const { data: signed } = await supabase.storage.from('applicant-documents').createSignedUrl(document.storage_path, 300)
+    const status = document.review_status === 'approved' ? 'completed' : document.review_status === 'rejected' || document.review_status === 'resubmission_requested' ? 'action_needed' : 'processing'
+    return { id: document.id, title: document.document_type, fileName: document.original_name, status, previewUrl: signed?.signedUrl ?? null, updatedAt: document.updated_at }
+  }))
+  return items
+})
+
 export const getSelectableInstitutions = cache(async (userId: string): Promise<University[]> => {
   const supabase = await createClient()
   const [{ institutions }, { data: selections }] = await Promise.all([
