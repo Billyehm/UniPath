@@ -9,11 +9,16 @@
 --
 -- After this completes, run FULL_SCHEMA.sql to rebuild everything.
 
--- 1. Delete all login accounts (so no orphaned auth users remain).
-delete from auth.users;
-
--- 2. Drop the entire public schema: all tables, functions, types, triggers.
+-- 1. Drop the entire public schema first: all app tables, functions,
+--    types and triggers. Dropping first avoids foreign-key blocks when
+--    the user accounts are deleted below.
 drop schema public cascade;
+
+-- 2. Clear stored file records so account deletion is not blocked.
+delete from storage.objects;
+
+-- 3. Delete all login accounts (no orphaned auth users remain).
+delete from auth.users;
 
 -- 3. Recreate the schema with the grants Supabase expects.
 create schema public;
