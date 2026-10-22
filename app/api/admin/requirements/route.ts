@@ -13,6 +13,7 @@ export async function POST(request: Request) {
     requirement_subtitle: parsed.data.subtitle,
     requirement_guidance: parsed.data.guidance ?? '',
     requirement_submission_type: parsed.data.submissionType,
+    requirement_amount_kobo: parsed.data.amountKobo ?? null,
   })
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
   return NextResponse.json({ id: data })

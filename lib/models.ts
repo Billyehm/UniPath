@@ -6,7 +6,8 @@ export type Requirement = {
   description: string
   guidance: string | null
   accepted: string | null
-  submissionType: 'file' | 'text' | 'both'
+  submissionType: 'file' | 'text' | 'both' | 'payment'
+  amountKobo: number | null
   responseText: string | null
   status: RequirementStatus
   note: string | null
@@ -140,7 +141,8 @@ export type AdminRequirement = {
   title: string
   subtitle: string
   guidance: string | null
-  submissionType: 'file' | 'text' | 'both'
+  submissionType: 'file' | 'text' | 'both' | 'payment'
+  amountKobo: number | null
   displayOrder: number
   isActive: boolean
 }

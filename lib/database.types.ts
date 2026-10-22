@@ -81,15 +81,21 @@ export interface Database {
         Relationships: Relationship[]
       }
       requirements: {
-        Row: { id: string; title: string; description: string; guidance: string | null; accepted_files: string | null; submission_type: 'file' | 'text' | 'both'; display_order: number; is_active: boolean; created_at: string; updated_at: string }
-        Insert: { id: string; title: string; description: string; guidance?: string | null; accepted_files?: string | null; submission_type?: 'file' | 'text' | 'both'; display_order?: number; is_active?: boolean }
-        Update: { title?: string; description?: string; guidance?: string | null; accepted_files?: string | null; submission_type?: 'file' | 'text' | 'both'; display_order?: number; is_active?: boolean }
+        Row: { id: string; title: string; description: string; guidance: string | null; accepted_files: string | null; submission_type: 'file' | 'text' | 'both' | 'payment'; amount_kobo: number | null; display_order: number; is_active: boolean; created_at: string; updated_at: string }
+        Insert: { id: string; title: string; description: string; guidance?: string | null; accepted_files?: string | null; submission_type?: 'file' | 'text' | 'both' | 'payment'; amount_kobo?: number | null; display_order?: number; is_active?: boolean }
+        Update: { title?: string; description?: string; guidance?: string | null; accepted_files?: string | null; submission_type?: 'file' | 'text' | 'both' | 'payment'; amount_kobo?: number | null; display_order?: number; is_active?: boolean }
+        Relationships: Relationship[]
+      }
+      payments: {
+        Row: { id: string; user_id: string; requirement_id: string | null; rrr: string; order_id: string; amount_kobo: number; status: 'pending' | 'successful' | 'failed'; payer_name: string | null; payer_email: string | null; payer_phone: string | null; remita_response: Json; verified_at: string | null; created_at: string; updated_at: string }
+        Insert: { id?: string; user_id: string; requirement_id?: string | null; rrr: string; order_id: string; amount_kobo: number; status?: 'pending' | 'successful' | 'failed'; payer_name?: string | null; payer_email?: string | null; payer_phone?: string | null; remita_response?: Json; verified_at?: string | null }
+        Update: { requirement_id?: string | null; status?: 'pending' | 'successful' | 'failed'; remita_response?: Json; verified_at?: string | null; updated_at?: string }
         Relationships: Relationship[]
       }
       user_requirements: {
         Row: { id: string; user_id: string; requirement_id: string; status: RequirementStatus; note: string | null; document_id: string | null; response_text: string | null; created_at: string; updated_at: string }
         Insert: { id?: string; user_id: string; requirement_id: string; status?: RequirementStatus; note?: string | null; document_id?: string | null; response_text?: string | null }
-        Update: { status?: RequirementStatus; note?: string | null; document_id?: string | null; response_text?: string | null }
+        Update: { status?: RequirementStatus; note?: string | null; document_id?: string | null; response_text?: string | null; updated_at?: string }
         Relationships: Relationship[]
       }
       universities: {
@@ -153,8 +159,9 @@ export interface Database {
       create_university_update: { Args: { update_title: string; update_description: string; update_category?: UpdateCategory; target_university_id?: string | null }; Returns: string }
       send_staff_message: { Args: { message_body: string; reply_to_message_id?: string | null }; Returns: string }
       edit_staff_message: { Args: { target_message_id: string; replacement_body: string }; Returns: string }
-      create_requirement: { Args: { requirement_title: string; requirement_subtitle: string; requirement_guidance: string; requirement_submission_type: 'file' | 'text' | 'both' }; Returns: string }
-      update_requirement: { Args: { requirement_id: string; requirement_title: string; requirement_subtitle: string; requirement_guidance: string; requirement_submission_type: 'file' | 'text' | 'both' }; Returns: string }
+      create_requirement: { Args: { requirement_title: string; requirement_subtitle: string; requirement_guidance: string; requirement_submission_type: 'file' | 'text' | 'both' | 'payment'; requirement_amount_kobo?: number | null }; Returns: string }
+      update_requirement: { Args: { requirement_id: string; requirement_title: string; requirement_subtitle: string; requirement_guidance: string; requirement_submission_type: 'file' | 'text' | 'both' | 'payment'; requirement_amount_kobo?: number | null }; Returns: string }
+      reorder_requirements: { Args: { requirement_ids: string[] }; Returns: void }
       delete_requirement: { Args: { requirement_id: string }; Returns: string }
       submit_requirement_text: { Args: { target_requirement_id: string; submitted_text: string }; Returns: string }
     }

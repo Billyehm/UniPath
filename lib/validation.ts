@@ -51,7 +51,11 @@ export const requirementSchema = z.object({
   title: z.string().trim().min(2).max(140),
   subtitle: z.string().trim().min(2).max(500),
   guidance: z.string().trim().max(4000).nullable().optional().default(null),
-  submissionType: z.enum(['file', 'text', 'both']),
+  submissionType: z.enum(['file', 'text', 'both', 'payment']),
+  amountKobo: z.number().int().positive().max(10000000000).nullable().optional().default(null),
+}).refine((data) => data.submissionType !== 'payment' || data.amountKobo, {
+  message: 'Payment steps need an amount.',
+  path: ['amountKobo'],
 })
 export const requirementTextSchema = z.object({ text: z.string().trim().min(1).max(5000) })
 

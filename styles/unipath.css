@@ -286,6 +286,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--adm-lime); outl
 .selected-names-list li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 4px; }
 .selected-names-list li + li { border-top: 1px solid var(--adm-border); }
 .selected-names-list li > span { font-size: 15px; font-weight: 600; }
+.payment-panel { display: flex; flex-direction: column; gap: 16px; }
+.payment-amount { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 16px 18px; border-radius: 14px; background: var(--adm-canvas); }
+.payment-amount span { color: var(--adm-muted); font-size: 14px; }
+.payment-amount strong { font-size: 26px; letter-spacing: -0.02em; }
+.rrr-box { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 18px; border: 1.5px dashed #6f8d75; border-radius: 14px; background: #fbfdf9; }
+.rrr-box span { color: var(--adm-muted); font-size: 13px; }
+.rrr-box strong { font-size: 30px; letter-spacing: 0.12em; }
+.rrr-channels { color: var(--adm-muted); font-size: 14px; line-height: 1.6; }
+.spin { animation: adm-spin 0.9s linear infinite; }
 .pick-remove { display: grid; width: 30px; height: 30px; flex-shrink: 0; place-items: center; border-radius: 999px; color: var(--adm-muted); }
 .pick-remove:hover { background: #fdecea; color: #b3261e; }
 .pick-remove svg { width: 15px; }

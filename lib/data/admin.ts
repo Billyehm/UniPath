@@ -121,7 +121,7 @@ export async function getAdminRequirements(): Promise<AdminRequirement[]> {
   const supabase = await createClient()
   const { data, error } = await supabase.from('requirements').select('*').order('display_order')
   if (error) throw error
-  return (data ?? []).map((item) => ({ id: item.id, title: item.title, subtitle: item.description, guidance: item.guidance, submissionType: item.submission_type, displayOrder: item.display_order, isActive: item.is_active }))
+  return (data ?? []).map((item) => ({ id: item.id, title: item.title, subtitle: item.description, guidance: item.guidance, submissionType: item.submission_type, amountKobo: item.amount_kobo ?? null, displayOrder: item.display_order, isActive: item.is_active }))
 }
 
 export async function getStaff(): Promise<StaffDirectoryItem[]> {

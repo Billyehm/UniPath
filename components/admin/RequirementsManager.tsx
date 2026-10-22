@@ -1,13 +1,13 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import { ChevronDown, FileText, Plus, Trash2, Type } from 'lucide-react'
+import { ArrowDown, ArrowUp, ChevronDown, CreditCard, FileText, Plus, Trash2, Type } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import type { AdminRequirement } from '@/lib/models'
 
-type FormValues = { title: string; subtitle: string; guidance: string; submissionType: AdminRequirement['submissionType'] }
-const blankForm: FormValues = { title: '', subtitle: '', guidance: '', submissionType: 'file' }
-const modeLabel = { file: 'File upload', text: 'Text response', both: 'File upload + text' }
+type FormValues = { title: string; subtitle: string; guidance: string; submissionType: AdminRequirement['submissionType']; amountNaira: string }
+const blankForm: FormValues = { title: '', subtitle: '', guidance: '', submissionType: 'file', amountNaira: '' }
+const modeLabel = { file: 'File upload', text: 'Text response', both: 'File upload + text', payment: 'Payment (Remita)' }
 
 const inputClass = 'mt-1 h-11 w-full rounded-xl border border-[#cfd6cc] px-3 font-normal outline-none focus:border-[#64806b]'
 const areaClass = 'mt-1 min-h-20 w-full rounded-xl border border-[#cfd6cc] p-3 font-normal outline-none focus:border-[#64806b]'
@@ -27,7 +27,7 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
 
   function openRow(item: AdminRequirement) {
     setExpandedId(item.id)
-    setEditForm({ title: item.title, subtitle: item.subtitle, guidance: item.guidance || '', submissionType: item.submissionType })
+    setEditForm({ title: item.title, subtitle: item.subtitle, guidance: item.guidance || '', submissionType: item.submissionType, amountNaira: item.amountKobo ? String(item.amountKobo / 100) : '' })
     setError('')
   }
 
@@ -40,22 +40,47 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
 
   async function create(event: FormEvent) {
     event.preventDefault(); setSaving(true); setError('')
-    const response = await fetch('/api/admin/requirements', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newForm) })
+    const kobo = newForm.submissionType === 'payment' ? amountKobo(newForm.amountNaira) : null
+    if (newForm.submissionType === 'payment' && !kobo) { setError('Enter a valid amount for the payment step.'); setSaving(false); return }
+    const response = await fetch('/api/admin/requirements', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...newForm, amountKobo: kobo }) })
     const result = await response.json()
     if (!response.ok) { setError(result.error || 'Unable to save requirement.'); setSaving(false); return }
-    const saved: AdminRequirement = { id: result.id, title: newForm.title.trim(), subtitle: newForm.subtitle.trim(), guidance: newForm.guidance.trim() || null, submissionType: newForm.submissionType, displayOrder: requirements.length, isActive: true }
+    const saved: AdminRequirement = { id: result.id, title: newForm.title.trim(), subtitle: newForm.subtitle.trim(), guidance: newForm.guidance.trim() || null, submissionType: newForm.submissionType, amountKobo: kobo, displayOrder: requirements.length, isActive: true }
     setRequirements((items) => [...items, saved])
     setNewForm(blankForm); setSaving(false); router.refresh()
   }
 
   async function saveEdit(event: FormEvent, item: AdminRequirement) {
     event.preventDefault(); setSaving(true); setError('')
-    const response = await fetch(`/api/admin/requirements/${item.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(editForm) })
+    const kobo = editForm.submissionType === 'payment' ? amountKobo(editForm.amountNaira) : null
+    if (editForm.submissionType === 'payment' && !kobo) { setError('Enter a valid amount for the payment step.'); setSaving(false); return }
+    const response = await fetch(`/api/admin/requirements/${item.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...editForm, amountKobo: kobo }) })
     const result = await response.json()
     if (!response.ok) { setError(result.error || 'Unable to save requirement.'); setSaving(false); return }
-    const saved: AdminRequirement = { ...item, title: editForm.title.trim(), subtitle: editForm.subtitle.trim(), guidance: editForm.guidance.trim() || null, submissionType: editForm.submissionType }
+    const saved: AdminRequirement = { ...item, title: editForm.title.trim(), subtitle: editForm.subtitle.trim(), guidance: editForm.guidance.trim() || null, submissionType: editForm.submissionType, amountKobo: kobo }
     setRequirements((items) => items.map((entry) => entry.id === item.id ? saved : entry))
     closeRow(); setSaving(false); router.refresh()
+  }
+
+  async function move(index: number, direction: -1 | 1) {
+    const target = index + direction
+    if (target < 0 || target >= requirements.length || saving) return
+    const previous = requirements
+    const reordered = previous.map((item, i) => ({ ...item, displayOrder: i }))
+    const [moved] = reordered.splice(index, 1)
+    reordered.splice(target, 0, moved)
+    reordered.forEach((item, i) => { item.displayOrder = i })
+    setRequirements(reordered); setError('')
+    const response = await fetch('/api/admin/requirements/reorder', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids: reordered.map((item) => item.id) }),
+    })
+    if (!response.ok) {
+      const result = await response.json().catch(() => ({}))
+      setError(result.error || 'Could not save the new order.')
+      setRequirements(previous)
+    }
   }
 
   async function remove(item: AdminRequirement) {
@@ -81,17 +106,28 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
       </label>
       <fieldset>
         <legend className="text-sm font-semibold">Submission type</legend>
-        <div className="mt-2 grid gap-2 sm:grid-cols-3">
-          {(['file', 'text', 'both'] as const).map((mode) => (
+        <div className="mt-2 grid gap-2 grid-cols-2 lg:grid-cols-4">
+          {(['file', 'text', 'both', 'payment'] as const).map((mode) => (
             <label key={mode} className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 text-sm transition ${form.submissionType === mode ? 'border-[#64806b] bg-[#eff4ea]' : 'border-[#dfe3da]'}`}>
               <input type="radio" checked={form.submissionType === mode} onChange={() => change('submissionType', mode)} className="accent-[#31583b]" />
-              <span className="grid size-8 place-items-center rounded-lg bg-white text-[#54725d]">{mode === 'file' ? <FileText className="size-4" /> : <Type className="size-4" />}</span>
+              <span className="grid size-8 place-items-center rounded-lg bg-white text-[#54725d]">{mode === 'file' ? <FileText className="size-4" /> : mode === 'payment' ? <CreditCard className="size-4" /> : <Type className="size-4" />}</span>
               <span><strong>{modeLabel[mode]}</strong>{mode === 'both' && <small className="block text-[#667069]">Student provides both items</small>}</span>
             </label>
           ))}
         </div>
       </fieldset>
+      {form.submissionType === 'payment' && (
+        <label className="block text-sm font-semibold">Amount (₦)
+          <input value={form.amountNaira} onChange={(event) => change('amountNaira', event.target.value)} className={inputClass} placeholder="e.g. 15000" inputMode="decimal" required />
+        </label>
+      )}
     </>
+  }
+
+  function amountKobo(value: string): number | null {
+    const naira = Number(String(value).replace(/,/g, ''))
+    if (!Number.isFinite(naira) || naira <= 0) return null
+    return Math.round(naira * 100)
   }
 
   return (
@@ -135,17 +171,23 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
             const expanded = expandedId === item.id
             return (
               <article key={item.id}>
-                <button
-                  type="button"
-                  onClick={() => toggleRow(item)}
-                  aria-expanded={expanded}
-                  className={`flex w-full items-center gap-4 px-5 py-4 text-left transition hover:bg-[#f7f9f4] sm:px-6 ${expanded ? 'bg-[#f7f9f4]' : ''}`}
-                >
-                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#eff4ea] text-sm font-bold text-[#31583b]">{index + 1}</span>
-                  <span className="min-w-0 flex-1 truncate font-bold">{item.title}</span>
-                  <span className="hidden rounded-full bg-[#f0f4ec] px-2.5 py-1 text-xs font-bold text-[#54725d] sm:inline">{modeLabel[item.submissionType]}</span>
-                  <ChevronDown className={`size-5 shrink-0 text-[#54725d] transition-transform ${expanded ? 'rotate-180' : ''}`} />
-                </button>
+                <div className="flex items-center gap-1 px-3 sm:px-4">
+                  <span className="flex shrink-0 flex-col">
+                    <button type="button" onClick={() => void move(index, -1)} disabled={index === 0 || saving} aria-label={`Move ${item.title} up`} className="grid size-7 place-items-center rounded-lg text-[#54725d] hover:bg-[#eff4ea] disabled:opacity-30"><ArrowUp className="size-4" /></button>
+                    <button type="button" onClick={() => void move(index, 1)} disabled={index === requirements.length - 1 || saving} aria-label={`Move ${item.title} down`} className="grid size-7 place-items-center rounded-lg text-[#54725d] hover:bg-[#eff4ea] disabled:opacity-30"><ArrowDown className="size-4" /></button>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => toggleRow(item)}
+                    aria-expanded={expanded}
+                    className={`flex min-w-0 flex-1 items-center gap-4 px-2 py-4 text-left transition hover:bg-[#f7f9f4] sm:px-3 ${expanded ? 'bg-[#f7f9f4]' : ''}`}
+                  >
+                    <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#eff4ea] text-sm font-bold text-[#31583b]">{index + 1}</span>
+                    <span className="min-w-0 flex-1 truncate font-bold">{item.title}</span>
+                    <span className="hidden rounded-full bg-[#f0f4ec] px-2.5 py-1 text-xs font-bold text-[#54725d] sm:inline">{modeLabel[item.submissionType]}</span>
+                    <ChevronDown className={`size-5 shrink-0 text-[#54725d] transition-transform ${expanded ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
                 {expanded && (
                   <form onSubmit={(event) => saveEdit(event, item)} className="space-y-4 border-t border-[#edf0e9] bg-[#fbfdf9] px-5 py-5 sm:px-6">
                     {fields(editForm, changeEdit)}

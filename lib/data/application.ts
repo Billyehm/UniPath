@@ -7,7 +7,7 @@ import { typeLabel } from '@/lib/models'
 export const getRequirements = cache(async (userId: string): Promise<Requirement[]> => {
   const supabase = await createClient()
   const [{ data: definitions, error }, { data: states }, { data: documents }] = await Promise.all([
-    supabase.from('requirements').select('id,title,description,guidance,accepted_files,submission_type,updated_at').eq('is_active', true).order('display_order'),
+    supabase.from('requirements').select('id,title,description,guidance,accepted_files,submission_type,amount_kobo,updated_at').eq('is_active', true).order('display_order'),
     supabase.from('user_requirements').select('requirement_id,document_id,response_text,status,note,updated_at').eq('user_id', userId),
     supabase.from('uploaded_documents').select('id,document_type,original_name,review_status,updated_at').eq('user_id', userId).order('updated_at', { ascending: false }),
   ])
@@ -26,6 +26,7 @@ export const getRequirements = cache(async (userId: string): Promise<Requirement
       guidance: definition.guidance,
       accepted: definition.accepted_files,
       submissionType: definition.submission_type,
+      amountKobo: definition.amount_kobo,
       responseText: state?.response_text ?? null,
       status: documentStatus ?? state?.status ?? 'not_started',
       note: state?.note ?? null,
@@ -123,8 +124,19 @@ export async function getNotifications(userId: string, pageSize = 50) {
   return { notifications: notifications ?? [], preferences: preferences?.preferences ?? {} }
 }
 
-export const getUnreadNotificationCount = cache(async (userId: string) => {
+export const getLatestPayment = cache(async (userId: string) => {
   const supabase = await createClient()
+  const { data } = await supabase
+    .from('payments')
+    .select('id,rrr,amount_kobo,status,verified_at,created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  return data
+})
+
+export const getUnreadNotificationCount = cache(async (userId: string) => {  const supabase = await createClient()
   const { count, error } = await supabase
     .from('notifications')
     .select('id', { count: 'exact', head: true })
