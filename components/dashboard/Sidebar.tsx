@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Bell, Building2, CircleHelp, FileCheck2, Files, GraduationCap, LayoutDashboard, School, Settings, UserRound, X } from 'lucide-react'
+import Logo from '@/components/Logo'
 
 const nav = [
   { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
@@ -35,7 +36,7 @@ export default function Sidebar({ open, onClose, name, unreadNotifications }: { 
         <div>
           <div className="sidebar-brand-row">
             <Link href="/dashboard" className="adm-brand" onClick={onClose}>
-              <span className="adm-brand-mark"><GraduationCap /></span><span>UniPath</span>
+              <Logo variant="dark" className="h-9 w-auto" />
             </Link>
             <button className="sidebar-close" aria-label="Close navigation" onClick={onClose}><X /></button>
           </div>

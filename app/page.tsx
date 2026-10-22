@@ -4,6 +4,7 @@ import {
   GraduationCap, LockKeyhole, Mail, Menu, MessageCircle,
 } from "lucide-react"
 import StoriesRotator from "@/components/StoriesRotator"
+import Logo from "@/components/Logo"
 
 const steps = [
   ["01", "Build your profile", "Tell us your goals, results, and preferred courses. It only takes a few minutes."],
@@ -32,7 +33,7 @@ export default function Page() {
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(11,31,20,.93),rgba(11,31,20,.68)_52%,rgba(11,31,20,.24))]" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#0b1f14]/75 via-transparent to-transparent" />
       <header className="relative z-20 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-10">
-        <a href="#top" className="flex items-center gap-2.5 text-white"><span className="grid size-10 place-items-center rounded-xl bg-[#d8ff63] text-[#17351f]"><GraduationCap className="size-5" /></span><span className="text-xl font-semibold tracking-[-.04em]">UniPath</span></a>
+        <a href="#top" className="flex items-center gap-2.5"><Logo variant="dark" className="h-10 w-auto" /></a>
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Main navigation"><a className="nav-link" href="#how">How it works</a><a className="nav-link" href="#features">Features</a><a className="nav-link" href="#stories">Stories</a><a className="nav-link" href="#faq">FAQs</a></nav>
         <a href="/auth" className="button-light hidden lg:inline-flex">Get started <ArrowRight className="size-4" /></a>
         <details className="relative lg:hidden"><summary aria-label="Open menu" className="grid size-11 cursor-pointer list-none place-items-center rounded-full border border-white/25 bg-white/10 text-white [&::-webkit-details-marker]:hidden"><Menu className="size-5" /></summary><nav className="absolute right-0 top-14 flex w-56 flex-col gap-1 rounded-2xl bg-white p-2 shadow-xl"><a className="mobile-link" href="#how">How it works</a><a className="mobile-link" href="#features">Features</a><a className="mobile-link" href="#stories">Stories</a><a className="mobile-link" href="#faq">FAQs</a><a className="mt-1 rounded-xl bg-[#17351f] px-4 py-3 text-center text-sm font-semibold text-white" href="/auth">Get started</a></nav></details>

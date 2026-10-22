@@ -2,7 +2,8 @@
 
 import { FormEvent, useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Check, Eye, EyeOff, GraduationCap } from 'lucide-react'
+import { ArrowRight, Check, Eye, EyeOff } from 'lucide-react'
+import Logo from '@/components/Logo'
 import { createClient } from '@/lib/supabase/client'
 
 const SESSION_COOKIE = 'unipath_last_active'
@@ -63,8 +64,8 @@ export default function AuthPage() {
   }
 
   return <main className="auth-shell">
-    <section className="auth-story"><Link href="/" className="auth-brand"><span><GraduationCap /></span>UniPath</Link><div><p className="auth-eyebrow">A clearer path to university</p><h1>Everything you need to keep moving forward.</h1><ul><li><Check />See what you’ve completed</li><li><Check />Know what you’re waiting for</li><li><Check />Understand what to do next</li></ul></div><p>Built for Nigerian university applicants.</p></section>
-    <section className="auth-form-side"><div className="auth-form-wrap"><div className="auth-mobile-brand"><GraduationCap />UniPath</div><p className="eyebrow-dark">{mode === 'signin' ? 'Welcome back' : mode === 'signup' ? 'Start your application' : 'Account recovery'}</p><h2>{mode === 'signin' ? 'Sign in to UniPath' : mode === 'signup' ? 'Create your account' : 'Reset your password'}</h2>
+    <section className="auth-story"><Link href="/" className="auth-brand"><Logo variant="dark" className="h-10 w-auto" /></Link><div><p className="auth-eyebrow">A clearer path to university</p><h1>Everything you need to keep moving forward.</h1><ul><li><Check />See what you’ve completed</li><li><Check />Know what you’re waiting for</li><li><Check />Understand what to do next</li></ul></div><p>Built for Nigerian university applicants.</p></section>
+    <section className="auth-form-side"><div className="auth-form-wrap"><div className="auth-mobile-brand"><Logo variant="light" className="h-9 w-auto" /></div><p className="eyebrow-dark">{mode === 'signin' ? 'Welcome back' : mode === 'signup' ? 'Start your application' : 'Account recovery'}</p><h2>{mode === 'signin' ? 'Sign in to UniPath' : mode === 'signup' ? 'Create your account' : 'Reset your password'}</h2>
       <form className="auth-form" onSubmit={submit}>{mode === 'signup' && <label>Full name<input name="name" autoComplete="name" placeholder="Enter your full name" required /></label>}<label>Email address<input type="email" name="email" autoComplete="email" placeholder="you@example.com" required /></label>{mode !== 'reset' && <label>Password<div className="password-field"><input type={showPassword ? 'text' : 'password'} name="password" autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} placeholder="At least 8 characters" minLength={8} required /><button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff /> : <Eye />}</button></div></label>}{mode === 'signin' && <div className="auth-options"><label><input type="checkbox" />Remember me</label><button type="button" onClick={() => { setMode('reset'); setMessage('') }}>Forgot password?</button></div>}<button className="adm-button button-primary full-button" disabled={loading} type="submit">{loading ? <><span className="spinner" />Please wait…</> : <>{mode === 'signin' ? 'Sign in' : mode === 'signup' ? 'Create account' : 'Send reset link'} <ArrowRight /></>}</button></form>
       {message && <p role="alert" className={messageType === 'success' ? 'mt-4 text-center text-sm font-medium text-emerald-700' : 'mt-4 text-center text-sm font-medium text-red-600'}>{message}</p>}
       {mode === 'reset' ? <div className="auth-switch">Remembered your password? <button onClick={() => { setMode('signin'); setMessage('') }}>Sign in</button></div> : <div className="auth-switch">{mode === 'signin' ? 'New to UniPath?' : 'Already have an account?'} <button onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setMessage('') }}>{mode === 'signin' ? 'Create an account' : 'Sign in'}</button></div>}<p className="auth-terms">By continuing, you agree to UniPath’s Terms and Privacy Policy.</p></div></section>

@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ClipboardCheck, FileClock, GraduationCap, LayoutDashboard, LogOut, MessagesSquare, ScrollText, Users } from 'lucide-react'
+import { ClipboardCheck, FileClock, LayoutDashboard, LogOut, MessagesSquare, ScrollText, Users } from 'lucide-react'
+import Logo from '@/components/Logo'
 
 const links = [
   { href: '/admin', label: 'Founder overview', icon: LayoutDashboard },
@@ -13,5 +14,5 @@ const links = [
 
 export default function OperationsShell({ children, role }: { children: React.ReactNode; role: string }) {
   const pathname = usePathname()
-  return <div className="ops-root"><aside className="ops-sidebar"><Link href="/admin" className="ops-brand"><span><GraduationCap /></span><div><strong>UniPath</strong><small>Internal operations</small></div></Link><nav>{links.map(({ href, label, icon: Icon }) => <Link key={href} href={href} className={pathname === href ? 'active' : ''}><Icon /><span>{label}</span></Link>)}</nav><div className="ops-account"><span>IN</span><div><strong>Ifeoma N.</strong><small>{role}</small></div><LogOut /></div></aside><main className="ops-main"><header><div><p>UniPath operations</p><h1>{role}</h1></div><Link href="/dashboard">Student app</Link></header><div className="ops-content">{children}</div></main></div>
+  return <div className="ops-root"><aside className="ops-sidebar"><Link href="/admin" className="ops-brand"><Logo variant="dark" className="h-8 w-auto" /><small>Internal operations</small></Link><nav>{links.map(({ href, label, icon: Icon }) => <Link key={href} href={href} className={pathname === href ? 'active' : ''}><Icon /><span>{label}</span></Link>)}</nav><div className="ops-account"><span>IN</span><div><strong>Ifeoma N.</strong><small>{role}</small></div><LogOut /></div></aside><main className="ops-main"><header><div><p>UniPath operations</p><h1>{role}</h1></div><Link href="/dashboard">Student app</Link></header><div className="ops-content">{children}</div></main></div>
 }
