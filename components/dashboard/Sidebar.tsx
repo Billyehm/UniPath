@@ -36,7 +36,7 @@ export default function Sidebar({ open, onClose, name, unreadNotifications }: { 
         <div>
           <div className="sidebar-brand-row">
             <Link href="/dashboard" className="adm-brand" onClick={onClose}>
-              <Logo variant="dark" className="h-9 w-auto" />
+              <Logo variant="dark" className="h-10 w-auto" />
             </Link>
             <button className="sidebar-close" aria-label="Close navigation" onClick={onClose}><X /></button>
           </div>
