@@ -154,6 +154,17 @@ export type StudentDetail = StudentDirectoryItem & {
   selectedUniversities: string[]
 }
 
+export type AdminPayment = {
+  id: string
+  studentName: string
+  studentEmail: string
+  reference: string
+  amountKobo: number
+  status: 'pending' | 'successful' | 'failed'
+  verifiedAt: string | null
+  createdAt: string
+}
+
 export type StaffDirectoryItem = {
   id: string
   name: string

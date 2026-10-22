@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import type { ActivityItem, AdminRequirement, DashboardSummary, DocumentReviewItem, StaffChatMessage, StaffDirectoryItem, StudentDetail, StudentDirectoryItem, SupportMessage, SupportTicket } from '@/lib/models'
+import type { ActivityItem, AdminPayment, AdminRequirement, DashboardSummary, DocumentReviewItem, StaffChatMessage, StaffDirectoryItem, StudentDetail, StudentDirectoryItem, SupportMessage, SupportTicket } from '@/lib/models'
 
 export async function getDashboardSummary(): Promise<DashboardSummary> {
   const supabase = await createClient()
@@ -264,4 +264,32 @@ export async function getStaffChatMessages(): Promise<StaffChatMessage[]> {
       versions: versionsByMessage.get(message.id) ?? [],
     }
   })
+}
+
+export async function getAdminPayments(): Promise<AdminPayment[]> {
+  const supabase = await createClient()
+  const { data: payments, error } = await supabase
+    .from('payments')
+    .select('id,user_id,reference,amount_kobo,status,verified_at,created_at')
+    .order('created_at', { ascending: false })
+    .limit(200)
+  if (error) throw error
+  if (!payments?.length) return []
+  const userIds = [...new Set(payments.map((payment) => payment.user_id))]
+  const [{ data: profiles }, { data: users }] = await Promise.all([
+    supabase.from('user_profiles').select('user_id,full_name').in('user_id', userIds),
+    supabase.from('users').select('id,email').in('id', userIds),
+  ])
+  const nameMap = new Map((profiles ?? []).map((profile) => [profile.user_id, profile.full_name]))
+  const emailMap = new Map((users ?? []).map((user) => [user.id, user.email]))
+  return payments.map((payment) => ({
+    id: payment.id,
+    studentName: nameMap.get(payment.user_id) || emailMap.get(payment.user_id) || 'Unknown',
+    studentEmail: emailMap.get(payment.user_id) || '',
+    reference: payment.reference,
+    amountKobo: payment.amount_kobo,
+    status: payment.status,
+    verifiedAt: payment.verified_at,
+    createdAt: payment.created_at,
+  }))
 }
