@@ -33,6 +33,10 @@ create policy "owners update own payments" on public.payments
   for update to authenticated using (user_id = (select auth.uid()))
   with check (user_id = (select auth.uid()));
 
+-- Allow 'payment' in the table-level check constraint too.
+alter table public.requirements drop constraint if exists requirements_submission_type_check;
+alter table public.requirements add constraint requirements_submission_type_check check (submission_type in ('file', 'text', 'both', 'payment'));
+
 -- Accept 'payment' as a submission type, with a required amount.
 drop function if exists public.create_requirement(text, text, text, text);
 create or replace function public.create_requirement(
