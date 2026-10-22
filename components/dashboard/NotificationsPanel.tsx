@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { AlertCircle, CheckCheck, FileCheck2, Radio, University } from 'lucide-react'
 import type { Json, TableRow } from '@/lib/database.types'
 
@@ -15,9 +16,13 @@ export default function NotificationsPanel({ initialItems, initialPreferences }:
   const [items, setItems] = useState(initialItems)
   const [tab, setTab] = useState<'notifications' | 'preferences'>('notifications')
   const [preferences, setPreferences] = useState<Preferences>(() => typeof initialPreferences === 'object' && initialPreferences && !Array.isArray(initialPreferences) ? { ...defaults, ...(initialPreferences as Preferences) } : defaults)
+  const router = useRouter()
   async function markRead(ids?: string[]) {
     const response = await fetch('/api/notifications/read', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(ids ? { ids } : {}) })
-    if (response.ok) setItems((current) => current.map((item) => !ids || ids.includes(item.id) ? { ...item, read_at: item.read_at || new Date().toISOString() } : item))
+    if (response.ok) {
+      setItems((current) => current.map((item) => !ids || ids.includes(item.id) ? { ...item, read_at: item.read_at || new Date().toISOString() } : item))
+      router.refresh()
+    }
   }
   async function toggle(category: string, channel: keyof Channel) {
     const next = { ...preferences, [category]: { ...preferences[category], [channel]: !preferences[category][channel] } }
