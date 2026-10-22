@@ -17,16 +17,16 @@ function initials(name: string) {
   return name.replace(/^The /, '').split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase()
 }
 
+import { institutionMatchesQuery } from '@/lib/institution-search'
+
 export default function AdminInstitutionsBrowser({ initialInstitutions }: { initialInstitutions: Institution[] }) {
   const [query, setQuery] = useState('')
   const [type, setType] = useState<'' | InstitutionType>('')
 
   const visible = useMemo(() => {
-    const q = query.toLowerCase()
     return initialInstitutions.filter((item) => {
       if (type && item.type !== type) return false
-      if (!q) return true
-      return `${item.name} ${item.state} ${item.ownership}`.toLowerCase().includes(q)
+      return institutionMatchesQuery(item, query)
     })
   }, [initialInstitutions, query, type])
 

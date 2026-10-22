@@ -1,4 +1,5 @@
 import type { Institution, InstitutionCourse } from '@/lib/models'
+import { institutionMatchesQuery } from '@/lib/institution-search'
 
 /**
  * Institutions directory data source.
@@ -106,7 +107,7 @@ export async function listInstitutions(filters: InstitutionFilters): Promise<{ i
   const filtered = all.filter((item) => {
     if (filters.type && item.type !== filters.type) return false
     if (filters.state && !item.state.toLowerCase().includes(filters.state.toLowerCase())) return false
-    if (q && !`${item.name} ${item.state} ${item.ownership}`.toLowerCase().includes(q)) return false
+    if (q && !institutionMatchesQuery(item, q)) return false
     return true
   })
   const limit = filters.limit ?? 48

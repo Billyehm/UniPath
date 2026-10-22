@@ -4,8 +4,9 @@ import { FormEvent, useMemo, useState } from 'react'
 import { Search, Send, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import type { University } from '@/lib/models'
+import { institutionMatchesQuery } from '@/lib/institution-search'
 
-export default function UpdateComposer({ universities }: { universities: University[] }) {
+export default function UpdateComposer({ universities }: { universities: { id: string; name: string; shortName: string; location: string }[] }) {
   const router = useRouter()
   const [target, setTarget] = useState<'all' | 'university'>('all')
   const [query, setQuery] = useState('')
@@ -16,7 +17,7 @@ export default function UpdateComposer({ universities }: { universities: Univers
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const selected = universities.find((university) => university.id === universityId)
-  const matches = useMemo(() => universities.filter((university) => university.name.toLowerCase().includes(query.toLowerCase()) || university.shortName.toLowerCase().includes(query.toLowerCase())).slice(0, 6), [query, universities])
+  const matches = useMemo(() => universities.filter((university) => institutionMatchesQuery({ id: university.id, name: university.name, state: university.location, ownership: '' }, query)).slice(0, 6), [query, universities])
 
   async function publish(event: FormEvent) {
     event.preventDefault()

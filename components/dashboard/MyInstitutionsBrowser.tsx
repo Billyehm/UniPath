@@ -4,13 +4,14 @@ import { useMemo, useState, type KeyboardEvent } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Check, MapPin, Search, X } from 'lucide-react'
 import type { University } from '@/lib/models'
+import { institutionMatchesQuery } from '@/lib/institution-search'
 
 export default function MyInstitutionsBrowser({ initialUniversities }: { initialUniversities: University[] }) {
   const [universities, setUniversities] = useState(initialUniversities)
   const [query, setQuery] = useState('')
   const [message, setMessage] = useState('')
   const [busyId, setBusyId] = useState<string | null>(null)
-  const visible = useMemo(() => universities.filter((item) => `${item.name} ${item.shortName} ${item.location}`.toLowerCase().includes(query.toLowerCase())), [universities, query])
+  const visible = useMemo(() => universities.filter((item) => institutionMatchesQuery({ id: item.id, name: item.name, state: item.location, ownership: '' }, query) || item.shortName.toLowerCase().includes(query.trim().toLowerCase())), [universities, query])
   const selected = useMemo(() => universities.filter((item) => item.selected), [universities])
 
   async function toggle(id: string) {

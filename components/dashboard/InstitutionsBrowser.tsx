@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowRight, MapPin, Search } from 'lucide-react'
 import type { Institution, InstitutionType } from '@/lib/models'
 import { TYPE_LABELS, typeLabel } from '@/lib/models'
+import { institutionMatchesQuery } from '@/lib/institution-search'
 
 const TYPE_FILTERS: { value: '' | InstitutionType; label: string }[] = [
   { value: '', label: 'All' },
@@ -18,11 +19,9 @@ export default function InstitutionsBrowser({ initialInstitutions }: { initialIn
   const [type, setType] = useState<'' | InstitutionType>('')
 
   const visible = useMemo(() => {
-    const q = query.toLowerCase()
     return initialInstitutions.filter((item) => {
       if (type && item.type !== type) return false
-      if (!q) return true
-      return `${item.name} ${item.state} ${item.ownership}`.toLowerCase().includes(q)
+      return institutionMatchesQuery(item, query)
     })
   }, [initialInstitutions, query, type])
 
