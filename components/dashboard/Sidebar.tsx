@@ -39,7 +39,7 @@ export default function Sidebar({ open, onClose, name, unreadNotifications }: { 
             </Link>
             <button className="sidebar-close" aria-label="Close navigation" onClick={onClose}><X /></button>
           </div>
-          <nav className="adm-nav" aria-label="Student navigation">
+          <nav className="adm-nav no-scrollbar" aria-label="Student navigation">
             {nav.map(({ href, label, icon: Icon }) => (
               <Link key={href} href={href} onClick={onClose} className={`adm-nav-item ${isActive(pathname, href) ? 'active' : ''}`}>
                 <Icon aria-hidden="true" /><span>{label}</span>{href === '/dashboard/notifications' && unreadNotifications > 0 ? <span className="nav-count">{unreadNotifications > 99 ? '99+' : unreadNotifications}</span> : null}
