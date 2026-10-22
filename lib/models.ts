@@ -69,6 +69,9 @@ export type UniversityUpdate = {
 
 export type DashboardSummary = {
   totalUsers: number
+  applicantUsers: number
+  adminUsers: number
+  supportUsers: number
   totalApplications: number
   totalDocuments: number
   pendingReviews: number

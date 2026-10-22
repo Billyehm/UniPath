@@ -2,6 +2,12 @@ import { getAdminPayments } from '@/lib/data/admin'
 import type { AdminPayment } from '@/lib/models'
 import { formatNaira } from '@/lib/monnify'
 
+function errorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message
+  if (typeof error === 'object' && error !== null && 'message' in error) return String((error as { message: unknown }).message)
+  return 'Could not load payments.'
+}
+
 const statusStyle: Record<string, string> = {
   successful: 'bg-emerald-100 text-emerald-800',
   pending: 'bg-amber-100 text-amber-800',
@@ -14,7 +20,7 @@ export default async function AdminPaymentsPage() {
   try {
     payments = await getAdminPayments()
   } catch (error) {
-    loadError = error instanceof Error ? error.message : 'Could not load payments.'
+    loadError = errorMessage(error)
   }
   return <div className="mx-auto max-w-7xl">
     <div className="mb-6">

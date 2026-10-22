@@ -3,8 +3,11 @@ import type { ActivityItem, AdminPayment, AdminRequirement, DashboardSummary, Do
 
 export async function getDashboardSummary(): Promise<DashboardSummary> {
   const supabase = await createClient()
-  const [users, applications, documents, pending, tickets] = await Promise.all([
+  const [users, applicants, admins, supportAgents, applications, documents, pending, tickets] = await Promise.all([
     supabase.from('users').select('*', { count: 'exact', head: true }),
+    supabase.from('users').select('*', { count: 'exact', head: true }).eq('role', 'applicant'),
+    supabase.from('users').select('*', { count: 'exact', head: true }).eq('role', 'admin'),
+    supabase.from('users').select('*', { count: 'exact', head: true }).eq('role', 'support_agent'),
     supabase.from('applications').select('*', { count: 'exact', head: true }),
     supabase.from('uploaded_documents').select('*', { count: 'exact', head: true }),
     supabase.from('uploaded_documents').select('*', { count: 'exact', head: true }).eq('review_status', 'pending'),
@@ -13,6 +16,9 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
 
   return {
     totalUsers: users.count ?? 0,
+    applicantUsers: applicants.count ?? 0,
+    adminUsers: admins.count ?? 0,
+    supportUsers: supportAgents.count ?? 0,
     totalApplications: applications.count ?? 0,
     totalDocuments: documents.count ?? 0,
     pendingReviews: pending.count ?? 0,
