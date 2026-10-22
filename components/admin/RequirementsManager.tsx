@@ -162,6 +162,7 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
       </section>
 
       <section className="overflow-hidden rounded-3xl border border-[#dfe3da] bg-white">
+        {error && !expandedId && <p className="border-b border-rose-200 bg-rose-50 px-5 py-3 text-sm font-medium text-rose-700 sm:px-6">{error}</p>}
         <div className="border-b border-[#dfe3da] px-5 py-5 sm:px-6">
           <h3 className="font-bold">Published requirements</h3>
           
