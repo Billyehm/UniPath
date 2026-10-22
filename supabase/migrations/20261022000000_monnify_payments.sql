@@ -26,7 +26,7 @@ alter table public.requirements
 
 alter table public.payments enable row level security;
 create policy "owners view own payments" on public.payments
-  for select to authenticated using (user_id = (select auth.uid()));
+  for select to authenticated using (user_id = (select auth.uid()) or public.is_staff());
 create policy "owners create own payments" on public.payments
   for insert to authenticated with check (user_id = (select auth.uid()));
 create policy "owners update own payments" on public.payments
