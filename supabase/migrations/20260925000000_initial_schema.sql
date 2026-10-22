@@ -349,6 +349,14 @@ grant select on public.admin_users to authenticated;
 grant select on public.uploaded_documents, public.document_reviews, public.support_tickets, public.support_messages, public.audit_logs to authenticated;
 grant usage, select on all sequences in schema public to authenticated;
 
+-- The service-role key (server-side admin client) bypasses RLS but still
+-- needs table grants. Without these, server operations fail with
+-- "permission denied for table ...".
+grant all on all tables in schema public to service_role;
+grant all on all sequences in schema public to service_role;
+alter default privileges in schema public grant all on tables to service_role;
+alter default privileges in schema public grant all on sequences to service_role;
+
 create policy "authenticated can read roles" on public.roles
 for select to authenticated using (true);
 

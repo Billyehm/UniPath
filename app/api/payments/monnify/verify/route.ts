@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getApiUser } from '@/lib/api-auth'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { queryTransaction } from '@/lib/monnify'
 import type { Json } from '@/lib/database.types'
 
@@ -46,12 +47,16 @@ export async function POST(request: Request) {
     .eq('id', payment.id)
 
   if (status === 'successful' && payment.requirement_id) {
-    await supabase
+    // Privileged updates run as service role: the payment was already
+    // verified to belong to this user above, and both writes stay scoped
+    // to their own user_id.
+    const admin = createAdminClient()
+    await admin
       .from('user_requirements')
       .update({ status: 'completed' as const, updated_at: new Date().toISOString() })
       .eq('user_id', user.id)
       .eq('requirement_id', payment.requirement_id)
-    await supabase.from('applications').update({ payment_status: 'paid' as const }).eq('user_id', user.id)
+    await admin.from('applications').update({ payment_status: 'paid' as const }).eq('user_id', user.id)
   }
 
   return NextResponse.json({ status })
