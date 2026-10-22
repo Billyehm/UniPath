@@ -887,3 +887,4 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--adm-lime); outl
 .guide-status-list { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
 .guide-status-row { display: flex; gap: 12px; align-items: flex-start; }
 .guide-status-row p { margin-top: 2px; font-size: 14px; }
+img, video { max-width: 100%; }
