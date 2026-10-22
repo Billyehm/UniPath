@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Check, Eye, EyeOff, GraduationCap } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -23,12 +23,6 @@ export default function AuthPage() {
     setMessage(text)
     setMessageType(type)
   }
-
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).get('expired') === '1') {
-      showMessage('You have been signed out after 5 hours of inactivity. Sign in again to continue.', 'error')
-    }
-  }, [])
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setLoading(true); setMessage('')
