@@ -401,16 +401,19 @@ on conflict (id) do update set
   file_size_limit = excluded.file_size_limit,
   allowed_mime_types = excluded.allowed_mime_types;
 
+drop policy if exists "owners and staff read document files" on storage.objects;
 create policy "owners and staff read document files" on storage.objects
 for select to authenticated using (
   bucket_id = 'applicant-documents'
   and ((storage.foldername(name))[1] = (select auth.uid())::text or public.is_staff())
 );
+drop policy if exists "applicants upload into own folder" on storage.objects;
 create policy "applicants upload into own folder" on storage.objects
 for insert to authenticated with check (
   bucket_id = 'applicant-documents'
   and (storage.foldername(name))[1] = (select auth.uid())::text
 );
+drop policy if exists "owners update own document files" on storage.objects;
 create policy "owners update own document files" on storage.objects
 for update to authenticated using (
   bucket_id = 'applicant-documents'
@@ -419,6 +422,7 @@ for update to authenticated using (
   bucket_id = 'applicant-documents'
   and (storage.foldername(name))[1] = (select auth.uid())::text
 );
+drop policy if exists "owners delete own document files" on storage.objects;
 create policy "owners delete own document files" on storage.objects
 for delete to authenticated using (
   bucket_id = 'applicant-documents'
@@ -939,6 +943,7 @@ begin
 end;
 $$;
 
+drop trigger if exists on_auth_user_confirmed on auth.users;
 create trigger on_auth_user_confirmed
 after insert or update of email_confirmed_at on auth.users
 for each row execute function public.create_confirmed_auth_user();
