@@ -4,10 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
 const SLIDES = [
-  { src: '/hero-school.jpg', alt: 'Students walking across a university campus' },
-  { src: '/hero-library.jpg', alt: 'Students studying together in a university library' },
-  { src: '/hero-graduation.jpg', alt: 'Graduates celebrating on campus' },
-  { src: '/hero-lecture.jpg', alt: 'Students in a modern university lecture hall' },
+  { src: '/hero-campus-mufti.jpg', alt: 'Students in casual wear walking across a university campus' },
+  { src: '/hero-campus-gate.jpg', alt: 'Students walking towards the university gate' },
+  { src: '/hero-library-wide.jpg', alt: 'Wide view of students studying in a university library' },
+  { src: '/hero-aerial-campus.jpg', alt: 'Aerial view of a university campus' },
 ]
 
 export default function HeroSlideshow() {
