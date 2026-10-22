@@ -87,9 +87,9 @@ export interface Database {
         Relationships: Relationship[]
       }
       payments: {
-        Row: { id: string; user_id: string; requirement_id: string | null; rrr: string; order_id: string; amount_kobo: number; status: 'pending' | 'successful' | 'failed'; payer_name: string | null; payer_email: string | null; payer_phone: string | null; remita_response: Json; verified_at: string | null; created_at: string; updated_at: string }
-        Insert: { id?: string; user_id: string; requirement_id?: string | null; rrr: string; order_id: string; amount_kobo: number; status?: 'pending' | 'successful' | 'failed'; payer_name?: string | null; payer_email?: string | null; payer_phone?: string | null; remita_response?: Json; verified_at?: string | null }
-        Update: { requirement_id?: string | null; status?: 'pending' | 'successful' | 'failed'; remita_response?: Json; verified_at?: string | null; updated_at?: string }
+        Row: { id: string; user_id: string; requirement_id: string | null; reference: string; provider_reference: string | null; checkout_url: string | null; amount_kobo: number; status: 'pending' | 'successful' | 'failed'; payer_name: string | null; payer_email: string | null; payer_phone: string | null; provider_response: Json; verified_at: string | null; created_at: string; updated_at: string }
+        Insert: { id?: string; user_id: string; requirement_id?: string | null; reference: string; provider_reference?: string | null; checkout_url?: string | null; amount_kobo: number; status?: 'pending' | 'successful' | 'failed'; payer_name?: string | null; payer_email?: string | null; payer_phone?: string | null; provider_response?: Json; verified_at?: string | null }
+        Update: { requirement_id?: string | null; provider_reference?: string | null; checkout_url?: string | null; status?: 'pending' | 'successful' | 'failed'; provider_response?: Json; verified_at?: string | null; updated_at?: string }
         Relationships: Relationship[]
       }
       user_requirements: {

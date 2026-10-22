@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   const requirementId = new URL(request.url).searchParams.get('requirementId')
   let query = supabase
     .from('payments')
-    .select('id,rrr,amount_kobo,status,verified_at,created_at')
+    .select('id,reference,checkout_url,amount_kobo,status,verified_at,created_at')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
     .limit(1)

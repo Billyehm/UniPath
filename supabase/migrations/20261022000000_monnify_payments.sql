@@ -1,18 +1,19 @@
--- Remita payments, payment-type requirements, and requirement reordering.
+-- Monnify payments, payment-type requirements, and requirement reordering.
 
--- Payment attempts (one row per generated RRR).
+-- Payment attempts (one row per Monnify payment reference).
 create table public.payments (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.users(id) on delete cascade,
   requirement_id text references public.requirements(id) on delete set null,
-  rrr text not null unique,
-  order_id text not null unique,
+  reference text not null unique,
+  provider_reference text,
+  checkout_url text,
   amount_kobo integer not null check (amount_kobo > 0),
   status text not null default 'pending' check (status in ('pending', 'successful', 'failed')),
   payer_name text,
   payer_email text,
   payer_phone text,
-  remita_response jsonb,
+  provider_response jsonb,
   verified_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

@@ -7,7 +7,7 @@ import type { AdminRequirement } from '@/lib/models'
 
 type FormValues = { title: string; subtitle: string; guidance: string; submissionType: AdminRequirement['submissionType']; amountNaira: string }
 const blankForm: FormValues = { title: '', subtitle: '', guidance: '', submissionType: 'file', amountNaira: '' }
-const modeLabel = { file: 'File upload', text: 'Text response', both: 'File upload + text', payment: 'Payment (Remita)' }
+const modeLabel = { file: 'File upload', text: 'Text response', both: 'File upload + text', payment: 'Payment (Monnify)' }
 
 const inputClass = 'mt-1 h-11 w-full rounded-xl border border-[#cfd6cc] px-3 font-normal outline-none focus:border-[#64806b]'
 const areaClass = 'mt-1 min-h-20 w-full rounded-xl border border-[#cfd6cc] p-3 font-normal outline-none focus:border-[#64806b]'

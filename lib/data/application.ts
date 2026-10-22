@@ -128,7 +128,7 @@ export const getLatestPayment = cache(async (userId: string) => {
   const supabase = await createClient()
   const { data } = await supabase
     .from('payments')
-    .select('id,rrr,amount_kobo,status,verified_at,created_at')
+    .select('id,reference,checkout_url,amount_kobo,status,verified_at,created_at')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
     .limit(1)
