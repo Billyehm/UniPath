@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react'
 import { ArrowDown, ArrowUp, ChevronDown, CreditCard, FileText, Plus, Trash2, Type } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import type { AdminRequirement } from '@/lib/models'
+import Toast from '@/components/Toast'
 
 type FormValues = { title: string; subtitle: string; guidance: string; submissionType: AdminRequirement['submissionType']; amountNaira: string }
 const blankForm: FormValues = { title: '', subtitle: '', guidance: '', submissionType: 'file', amountNaira: '' }
@@ -153,7 +154,6 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
         {showNewForm && (
           <form onSubmit={create} className="mt-6 space-y-4 border-t border-[#edf0e9] pt-6">
             {fields(newForm, changeNew)}
-            {error && !expandedId && <p className="text-sm text-rose-700">{error}</p>}
             <button disabled={saving} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#17351f] px-6 text-sm font-bold text-white disabled:opacity-60">
               <Plus className="size-4" />{saving ? <><span className="spinner" />Saving…</> : 'Add requirement'}
             </button>
@@ -162,7 +162,6 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
       </section>
 
       <section className="overflow-hidden rounded-3xl border border-[#dfe3da] bg-white">
-        {error && !expandedId && <p className="border-b border-rose-200 bg-rose-50 px-5 py-3 text-sm font-medium text-rose-700 sm:px-6">{error}</p>}
         <div className="border-b border-[#dfe3da] px-5 py-5 sm:px-6">
           <h3 className="font-bold">Published requirements</h3>
           
@@ -192,7 +191,6 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
                 {expanded && (
                   <form onSubmit={(event) => saveEdit(event, item)} className="space-y-4 border-t border-[#edf0e9] bg-[#fbfdf9] px-5 py-5 sm:px-6">
                     {fields(editForm, changeEdit)}
-                    {error && <p className="text-sm text-rose-700">{error}</p>}
                     <div className="flex flex-wrap gap-2">
                       <button disabled={saving} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#17351f] px-6 text-sm font-bold text-white disabled:opacity-60">
                         {saving ? <><span className="spinner" />Saving…</> : 'Save changes'}
@@ -210,6 +208,7 @@ export default function RequirementsManager({ initialRequirements }: { initialRe
           {!requirements.length && <div className="px-6 py-16 text-center text-sm text-[#667069]">No requirements yet. Add the first one using the form above.</div>}
         </div>
       </section>
+      {error && <Toast message={error} onDismiss={() => setError('')} />}
     </div>
   )
 }

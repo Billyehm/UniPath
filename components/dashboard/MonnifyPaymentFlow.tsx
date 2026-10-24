@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { BadgeCheck, ExternalLink, Loader2, RefreshCw } from 'lucide-react'
 import { formatNaira } from '@/lib/monnify'
+import Toast from '@/components/Toast'
 
 type Payment = {
   id: string
@@ -99,7 +100,7 @@ export default function MonnifyPaymentFlow({ requirementId, amountKobo }: { requ
         <button type="button" disabled={busy} onClick={verify} className="adm-button button-secondary full-button">
           {busy ? <><Loader2 className="spin" />Checking…</> : <><RefreshCw />I have paid, check status</>}
         </button>
-        {returnState === 'failed' && <p className="form-message error-message" role="alert">The payment was not completed. You can try again.</p>}
+        {returnState === 'failed' && <Toast message="The payment was not completed. You can try again." onDismiss={() => setReturnState(null)} />}
       </>
     ) : (
       <>
@@ -107,11 +108,11 @@ export default function MonnifyPaymentFlow({ requirementId, amountKobo }: { requ
           {busy ? <><Loader2 className="spin" />Starting…</> : <><ExternalLink />Pay with Monnify</>}
         </button>
         {(payment?.status === 'failed' || returnState === 'error') && (
-          <p className="form-message error-message" role="alert">Something went wrong starting the payment. Please try again.</p>
+          <Toast message="Something went wrong starting the payment. Please try again." onDismiss={() => setError('')} />
         )}
       </>
     )}
 
-    {error && <p className="form-message error-message" role="alert">{error}</p>}
+    {error && <Toast message={error} onDismiss={() => setError('')} />}
   </div>
 }

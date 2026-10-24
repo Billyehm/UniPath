@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react'
 import { MessageCircle, Plus, Send } from 'lucide-react'
 import type { TableRow } from '@/lib/database.types'
 import { formatDateTime } from '@/lib/format'
+import Toast from '@/components/Toast'
 
 type Ticket = TableRow<'support_tickets'> & { messages: TableRow<'support_messages'>[] }
 
@@ -90,8 +91,8 @@ export default function ApplicantMessages({ initialTickets, userId }: { initialT
           <textarea value={draft} onChange={(event) => setDraft(event.target.value)} className="min-h-16 flex-1 rounded-xl border border-[#cfd6cc] p-3 text-sm" placeholder="Write your message…" required />
           <button disabled={sending} className="grid size-12 shrink-0 place-items-center self-end rounded-full bg-[#17351f] text-white transition-transform active:scale-90 disabled:opacity-60" aria-label="Send">{sending ? <span className="spinner" /> : <Send className="size-4" />}</button>
         </div>
-        {error && <p className="mt-2 text-sm font-medium text-red-600">{error}</p>}
       </form>
     </section>
+    {error && <Toast message={error} onDismiss={() => setError('')} />}
   </div>
 }

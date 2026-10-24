@@ -6,6 +6,7 @@ import { ArrowRight, Check, MapPin, Search, X } from 'lucide-react'
 import type { University } from '@/lib/models'
 import { institutionMatchesQuery } from '@/lib/institution-search'
 import Pagination from '@/components/Pagination'
+import Toast from '@/components/Toast'
 
 const PAGE_SIZE = 24
 
@@ -27,7 +28,7 @@ export default function MyInstitutionsBrowser({ initialUniversities }: { initial
     const response = await fetch(`/api/universities/${id}/selection`, { method: 'POST' })
     const result = await response.json()
     setBusyId(null)
-    if (!response.ok) { setMessage(result.error || 'Unable to update selection'); window.setTimeout(() => setMessage(''), 4000); return }
+    if (!response.ok) { setMessage(result.error || 'Unable to update selection'); return }
     setUniversities((items) => items.map((item) => item.id === id ? { ...item, selected: result.selected } : item))
   }
 
@@ -41,6 +42,6 @@ export default function MyInstitutionsBrowser({ initialUniversities }: { initial
     {selected.length > 0 && <section className="adm-card selected-names-card"><div className="section-heading"><div><h2>Your picks</h2></div></div><ul className="selected-names-list">{selected.map((item) => <li key={item.id}><span>{item.name}</span><button type="button" className="pick-remove" aria-label={`Remove ${item.name} from selection`} onClick={() => void toggle(item.id)}><X /></button></li>)}</ul></section>}
 
     <section className="adm-card university-browser"><div className="university-toolbar"><label className="search-field large"><Search /><span className="sr-only">Search institutions</span><input value={query} onChange={(event) => { setQuery(event.target.value); setPage(1) }} placeholder="Search by name, abbreviation or state" />{query && <button type="button" className="search-clear" aria-label="Clear search" onClick={() => setQuery('')}><X /></button>}</label><span>{visible.length} institutions</span></div><div className="university-grid">{paged.map((university) => <article key={university.id} className={`university-card selectable${university.selected ? ' selected' : ''}`} onClick={() => void toggle(university.id)} onKeyDown={(event) => onCardKey(event, university.id)} tabIndex={0} role="checkbox" aria-checked={university.selected} aria-label={`${university.name}, ${university.selected ? 'selected' : 'not selected'}`}><div className="university-card-top"><span className="university-mark">{university.shortName.slice(0, 2)}</span>{busyId === university.id ? <span className="spinner" /> : university.selected ? <span className="picked-check"><Check /></span> : null}</div><h3>{university.name}</h3><p className="location"><MapPin />{university.location}</p><p>{university.description}</p><div className="university-update"><small>Latest update</small><strong>{university.latestUpdate || 'No current announcement'}</strong></div><Link href={`/dashboard/institutions/${university.id}`} onClick={(event) => event.stopPropagation()}>View institution <ArrowRight /></Link></article>)}</div><Pagination page={safePage} totalPages={totalPages} onPage={setPage} /></section>
-    {message && <div className="selection-toast" role="alert"><span>{message}</span><button type="button" aria-label="Dismiss" onClick={() => setMessage('')}><X /></button></div>}
+    {message && <Toast message={message} onDismiss={() => setMessage('')} />}
   </>
 }
