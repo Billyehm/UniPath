@@ -19,7 +19,7 @@ const adminGroups: NavigationGroup[] = [
     { href: '/admin/requirements', label: 'Requirements', icon: ListChecks },
     { href: '/admin/documents', label: 'Documents', icon: FileCheck2 },
     { href: '/admin/payments', label: 'Payments', icon: CreditCard },
-    { href: '/admin/updates', label: 'Updates', icon: BookOpen },
+    { href: '/admin/updates', label: 'News', icon: BookOpen },
     { href: '/admin/notifications', label: 'Notifications', icon: Bell },
   ] },
   { label: 'Insights', items: [

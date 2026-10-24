@@ -6,7 +6,7 @@ import { Bell, Menu, Search } from 'lucide-react'
 
 const titles: Record<string, string> = {
   '/dashboard': 'Overview', '/dashboard/requirements': 'Requirement', '/dashboard/documents': 'My Documents',
-  '/dashboard/my-institutions': 'My Institutions', '/dashboard/updates': 'University Updates', '/dashboard/messages': 'Support Messages',
+  '/dashboard/my-institutions': 'My Institutions', '/dashboard/updates': 'News', '/dashboard/messages': 'Support Messages',
   '/dashboard/notifications': 'Notifications', '/dashboard/profile': 'Student Profile', '/dashboard/settings': 'Settings', '/dashboard/support': 'Help & Support', '/dashboard/payment': 'Application Payment',
 }
 

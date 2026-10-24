@@ -12,7 +12,7 @@ const nav = [
   { href: '/dashboard/requirements', label: 'Requirement', icon: FileCheck2 },
   { href: '/dashboard/my-institutions', label: 'My Institutions', icon: Building2 },
   { href: '/dashboard/institutions', label: 'All Institutions', icon: School },
-  { href: '/dashboard/updates', label: 'Updates', icon: GraduationCap },
+  { href: '/dashboard/updates', label: 'News', icon: GraduationCap },
   { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
 ]
 

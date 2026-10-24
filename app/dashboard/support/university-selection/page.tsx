@@ -25,7 +25,7 @@ export default function UniversitySelectionGuide() {
         <h3>Exploring institutions</h3>
         <p>Tap any institution name to open its profile: courses offered, institution type, and location. Use the course search to check whether your intended course is available before you pick the school.</p>
         <h3>What your picks are used for</h3>
-        <p>Your selected institutions shape your application. Document requirements and updates from our team are matched to the schools you picked, so keep the list accurate.</p>
+        <p>Your selected institutions shape your application. Document requirements and news from our team are matched to the schools you picked, so keep the list accurate.</p>
       </div>
     </section>
   </div>
