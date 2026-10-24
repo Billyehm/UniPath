@@ -20,7 +20,7 @@ function isActive(pathname: string, href: string) {
   return href === '/dashboard' ? pathname === href : pathname.startsWith(href)
 }
 
-export default function Sidebar({ open, onClose, name, unreadNotifications }: { open: boolean; onClose: () => void; name: string; unreadNotifications: number }) {
+export default function Sidebar({ open, onClose, name, avatarUrl, unreadNotifications }: { open: boolean; onClose: () => void; name: string; avatarUrl?: string | null; unreadNotifications: number }) {
   const pathname = usePathname()
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function Sidebar({ open, onClose, name, unreadNotifications }: { 
           <Link className={`adm-nav-item ${isActive(pathname, '/dashboard/support') ? 'active' : ''}`} href="/dashboard/support" onClick={onClose}><CircleHelp /><span>Help & Support</span></Link>
           <Link className={`adm-nav-item ${isActive(pathname, '/dashboard/settings') ? 'active' : ''}`} href="/dashboard/settings" onClick={onClose}><Settings /><span>Settings</span></Link>
           <Link href="/dashboard/profile" onClick={onClose} className={`adm-profile ${isActive(pathname, '/dashboard/profile') ? 'active' : ''}`}>
-            <span className="avatar"><UserRound /></span>
+            <span className="avatar">{avatarUrl ? <img src={avatarUrl} alt="" className="h-full w-full object-cover" /> : <UserRound />}</span>
             <span className="profile-info"><strong>{name}</strong><small>Student profile</small></span>
           </Link>
         </div>

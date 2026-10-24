@@ -8,6 +8,7 @@ export type AuthenticatedUser = {
   email: string
   role: AppRole
   displayName: string
+  avatarUrl?: string | null
 }
 
 export const requireUser = cache(async (): Promise<AuthenticatedUser> => {
@@ -18,11 +19,12 @@ export const requireUser = cache(async (): Promise<AuthenticatedUser> => {
 
   const [{ data: user, error }, { data: profile }] = await Promise.all([
     supabase.from('users').select('id,email,role').eq('id', id).single(),
-    supabase.from('user_profiles').select('full_name').eq('user_id', id).maybeSingle(),
+    supabase.from('user_profiles').select('full_name,avatar_path').eq('user_id', id).maybeSingle(),
   ])
   if (error || !user) redirect('/auth')
 
-  return { id: user.id, email: user.email, role: user.role, displayName: profile?.full_name || user.email }
+  const avatarUrl = profile?.avatar_path ? supabase.storage.from('avatars').getPublicUrl(profile.avatar_path).data.publicUrl : null
+  return { id: user.id, email: user.email, role: user.role, displayName: profile?.full_name || user.email, avatarUrl }
 })
 
 export const requireStaff = cache(async (): Promise<AuthenticatedUser> => {

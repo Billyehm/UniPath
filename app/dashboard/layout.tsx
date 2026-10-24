@@ -12,5 +12,5 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (user.role === 'admin') redirect('/admin')
   if (user.role === 'support_agent') redirect('/admin/support')
   const unreadNotifications = await getUnreadNotificationCount(user.id)
-  return <><SessionWatchdog /><DashboardShell name={user.displayName} unreadNotifications={unreadNotifications}>{children}</DashboardShell></>
+  return <><SessionWatchdog /><DashboardShell name={user.displayName} avatarUrl={user.avatarUrl} unreadNotifications={unreadNotifications}>{children}</DashboardShell></>
 }

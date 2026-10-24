@@ -105,6 +105,7 @@ export type SupportTicket = {
   priority: TicketPriority
   applicantName: string
   applicantEmail: string
+  applicantAvatarUrl?: string | null
   createdAt: string
   updatedAt: string
   messages: SupportMessage[]
@@ -131,6 +132,7 @@ export type StudentDirectoryItem = {
   id: string
   name: string
   email: string
+  avatarUrl?: string | null
   applicationNumber: string | null
   active: boolean
   joinedAt: string

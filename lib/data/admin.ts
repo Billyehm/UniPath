@@ -59,12 +59,13 @@ export async function getSupportTickets(assignedTo?: string): Promise<SupportTic
   const userIds = [...new Set(tickets.map((ticket) => ticket.user_id))]
   const [{ data: messages }, { data: profiles }, { data: users }, { data: admins }] = await Promise.all([
     supabase.from('support_messages').select('*').in('ticket_id', ticketIds).order('created_at'),
-    supabase.from('user_profiles').select('user_id,full_name').in('user_id', userIds),
+    supabase.from('user_profiles').select('user_id,full_name,avatar_path').in('user_id', userIds),
     supabase.from('users').select('id,email').in('id', userIds),
     supabase.from('admin_users').select('user_id,display_name'),
   ])
 
   const profileMap = new Map((profiles ?? []).map((profile) => [profile.user_id, profile.full_name]))
+  const avatarMap = new Map((profiles ?? []).map((profile) => [profile.user_id, profile.avatar_path ? supabase.storage.from('avatars').getPublicUrl(profile.avatar_path).data.publicUrl : null]))
   const emailMap = new Map((users ?? []).map((user) => [user.id, user.email]))
   const adminMap = new Map((admins ?? []).map((admin) => [admin.user_id, admin.display_name]))
   const messageMap = new Map<string, SupportMessage[]>()
@@ -91,6 +92,7 @@ export async function getSupportTickets(assignedTo?: string): Promise<SupportTic
     priority: ticket.priority,
     applicantName: profileMap.get(ticket.user_id) || 'Applicant',
     applicantEmail: emailMap.get(ticket.user_id) || '',
+    applicantAvatarUrl: avatarMap.get(ticket.user_id) ?? null,
     createdAt: ticket.created_at,
     updatedAt: ticket.updated_at,
     messages: messageMap.get(ticket.id) ?? [],
@@ -217,7 +219,7 @@ export async function getStudentDetail(userId: string): Promise<StudentDetail | 
   if (!user) return null
 
   const [{ data: profile }, { data: application }, documents, { data: selections }, { data: universities }, { data: tickets }] = await Promise.all([
-    supabase.from('user_profiles').select('full_name,application_number').eq('user_id', userId).maybeSingle(),
+    supabase.from('user_profiles').select('full_name,application_number,avatar_path').eq('user_id', userId).maybeSingle(),
     supabase.from('applications').select('status,payment_status').eq('user_id', userId).maybeSingle(),
     getDocumentsForReview(userId),
     supabase.from('university_selections').select('university_id').eq('user_id', userId),
@@ -229,6 +231,7 @@ export async function getStudentDetail(userId: string): Promise<StudentDetail | 
     id: user.id,
     name: profile?.full_name || 'Applicant',
     email: user.email,
+    avatarUrl: profile?.avatar_path ? supabase.storage.from('avatars').getPublicUrl(profile.avatar_path).data.publicUrl : null,
     applicationNumber: profile?.application_number ?? null,
     active: user.is_active,
     joinedAt: user.created_at,
