@@ -18,10 +18,14 @@ function initials(name: string) {
 }
 
 import { institutionMatchesQuery } from '@/lib/institution-search'
+import Pagination from '@/components/Pagination'
+
+const PAGE_SIZE = 24
 
 export default function AdminInstitutionsBrowser({ initialInstitutions }: { initialInstitutions: Institution[] }) {
   const [query, setQuery] = useState('')
   const [type, setType] = useState<'' | InstitutionType>('')
+  const [page, setPage] = useState(1)
 
   const visible = useMemo(() => {
     return initialInstitutions.filter((item) => {
@@ -30,15 +34,19 @@ export default function AdminInstitutionsBrowser({ initialInstitutions }: { init
     })
   }, [initialInstitutions, query, type])
 
+  const totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE))
+  const safePage = Math.min(page, totalPages)
+  const paged = visible.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
+
   return <>
     <div className="mt-7 flex flex-col gap-4">
       <label className="flex h-11 w-full max-w-xl items-center gap-2 rounded-xl border border-[#dfe3da] bg-white px-3">
         <Search className="size-4 shrink-0 text-[#667069]" /><span className="sr-only">Search institutions</span>
-        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by name, state or ownership" className="w-full bg-transparent text-sm outline-none placeholder:text-[#9aa39c]" />
+        <input value={query} onChange={(event) => { setQuery(event.target.value); setPage(1) }} placeholder="Search by name, state or ownership" className="w-full bg-transparent text-sm outline-none placeholder:text-[#9aa39c]" />
       </label>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by institution type">
         {TYPE_FILTERS.map((filter) => (
-          <button key={filter.label} type="button" onClick={() => setType(filter.value)} aria-pressed={type === filter.value}
+          <button key={filter.label} type="button" onClick={() => { setType(filter.value); setPage(1) }} aria-pressed={type === filter.value}
             className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${type === filter.value ? 'border-[#17351f] bg-[#17351f] text-white' : 'border-[#dfe3da] bg-white text-[#3c443e] hover:border-[#17351f]'}`}>
             {filter.label}
           </button>
@@ -48,7 +56,7 @@ export default function AdminInstitutionsBrowser({ initialInstitutions }: { init
     </div>
     {visible.length ? (
       <section className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {visible.map((institution) => (
+        {paged.map((institution) => (
           <article key={institution.id} className="rounded-2xl border border-[#dfe3da] bg-white p-5">
             <div className="flex items-start justify-between">
               <span className="grid size-11 place-items-center rounded-xl bg-[#17351f] font-black text-[#d8ff63]">{initials(institution.name)}</span>
@@ -67,5 +75,6 @@ export default function AdminInstitutionsBrowser({ initialInstitutions }: { init
         
       </div>
     )}
+    <Pagination page={safePage} totalPages={totalPages} onPage={setPage} />
   </>
 }

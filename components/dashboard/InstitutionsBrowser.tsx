@@ -6,6 +6,9 @@ import { ArrowRight, MapPin, Search } from 'lucide-react'
 import type { Institution, InstitutionType } from '@/lib/models'
 import { TYPE_LABELS, typeLabel } from '@/lib/models'
 import { institutionMatchesQuery } from '@/lib/institution-search'
+import Pagination from '@/components/Pagination'
+
+const PAGE_SIZE = 24
 
 const TYPE_FILTERS: { value: '' | InstitutionType; label: string }[] = [
   { value: '', label: 'All' },
@@ -17,6 +20,7 @@ const TYPE_FILTERS: { value: '' | InstitutionType; label: string }[] = [
 export default function InstitutionsBrowser({ initialInstitutions }: { initialInstitutions: Institution[] }) {
   const [query, setQuery] = useState('')
   const [type, setType] = useState<'' | InstitutionType>('')
+  const [page, setPage] = useState(1)
 
   const visible = useMemo(() => {
     return initialInstitutions.filter((item) => {
@@ -24,6 +28,10 @@ export default function InstitutionsBrowser({ initialInstitutions }: { initialIn
       return institutionMatchesQuery(item, query)
     })
   }, [initialInstitutions, query, type])
+
+  const totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE))
+  const safePage = Math.min(page, totalPages)
+  const paged = visible.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
 
   return <>
     <section className="page-intro">
@@ -38,18 +46,18 @@ export default function InstitutionsBrowser({ initialInstitutions }: { initialIn
       <div className="university-toolbar">
         <label className="search-field large">
           <Search /><span className="sr-only">Search institutions</span>
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by name, state or ownership" />
+          <input value={query} onChange={(event) => { setQuery(event.target.value); setPage(1) }} placeholder="Search by name, state or ownership" />
         </label>
         <span>{visible.length} results</span>
       </div>
       <div className="chip-row" role="group" aria-label="Filter by institution type">
         {TYPE_FILTERS.map((filter) => (
-          <button key={filter.label} type="button" onClick={() => setType(filter.value)} className={`chip${type === filter.value ? ' active' : ''}`} aria-pressed={type === filter.value}>{filter.label}</button>
+          <button key={filter.label} type="button" onClick={() => { setType(filter.value); setPage(1) }} className={`chip${type === filter.value ? ' active' : ''}`} aria-pressed={type === filter.value}>{filter.label}</button>
         ))}
       </div>
       {visible.length ? (
         <div className="university-grid">
-          {visible.map((institution) => (
+          {paged.map((institution) => (
             <article className="university-card" key={institution.id}>
               <div className="university-card-top">
                 <span className="university-mark">{institution.name.replace(/^The /, '').split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase()}</span>
@@ -65,6 +73,7 @@ export default function InstitutionsBrowser({ initialInstitutions }: { initialIn
       ) : (
         <div className="empty-state compact-empty"><Search /><h3>No institutions found</h3></div>
       )}
+      <Pagination page={safePage} totalPages={totalPages} onPage={setPage} />
     </section>
   </>
 }
