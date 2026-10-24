@@ -16,7 +16,7 @@ export default function UniversitySelectionGuide() {
         <h3>Choosing your institutions</h3>
         <ol>
           <li>Open <strong>My Institutions</strong> from the sidebar.</li>
-          <li>Browse or search the full directory of 752 institutions: universities, polytechnics, and colleges of education.</li>
+          <li>Browse or search the full directory of institutions: universities, polytechnics, and colleges of education.</li>
           <li>Tap an institution to add it to your picks. You can pick up to <strong>three</strong>.</li>
           <li>Your picks appear in a pinned list at the top so you always see them first.</li>
         </ol>
