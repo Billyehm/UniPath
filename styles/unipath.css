@@ -888,3 +888,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--adm-lime); outl
 .guide-status-row { display: flex; gap: 12px; align-items: flex-start; }
 .guide-status-row p { margin-top: 2px; font-size: 14px; }
 img, video { max-width: 100%; }
+.selection-toast { position: fixed; left: 50%; bottom: 24px; z-index: 90; display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 32px); padding: 14px 16px; border-radius: 14px; background: #7f1d1d; color: white; font-size: 14px; font-weight: 600; box-shadow: 0 12px 32px rgb(0 0 0 / 25%); transform: translateX(-50%); }
+.selection-toast button { display: grid; flex: 0 0 auto; width: 24px; height: 24px; place-items: center; border: 0; border-radius: 50%; background: rgb(255 255 255 / 20%); color: white; }
+.selection-toast button:active { transform: scale(.9); }
+.selection-toast button svg { width: 14px; }
